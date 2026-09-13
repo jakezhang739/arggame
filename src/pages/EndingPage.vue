@@ -6,6 +6,7 @@ import { useGameStore } from '../stores/game';
 import { content } from '../game/content';
 import { deleteAllRecordings } from '../game/idb';
 import AudioFragment from '../components/AudioFragment.vue';
+import AppIcon from '../components/AppIcon.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -41,10 +42,10 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
 
 <template>
   <div class="ending" :data-testid="`p15:ending--${endingId}`">
+    <p class="eyebrow mono">NIGHT REVIEW / RESULT</p>
     <h1>{{ data.title }}</h1>
-    <p class="muted small">触发条件：{{ data.trigger }}</p>
 
-    <section class="panel">
+    <section class="panel result-panel">
       <p class="body">{{ data.body }}</p>
       <p class="ui mono" data-testid="p15:ui">{{ data.ui }}</p>
       <template v-if="endingId === 'A'">
@@ -75,15 +76,19 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
     </section>
 
     <section class="panel actions">
-      <h2>固定动作</h2>
+      <h2>本次调查</h2>
       <div class="actionrow">
-        <RouterLink to="/debrief" class="button" data-testid="p15:goto-debrief">去复盘</RouterLink>
-        <button class="ghost" data-testid="p15:export" @click="game.exportArchive()">导出存档</button>
+        <RouterLink to="/debrief" class="button primary" data-testid="p15:goto-debrief"><AppIcon name="trail" :size="17" /> 查看我是如何走到这里的</RouterLink>
+        <button class="ghost" data-testid="p15:export" @click="game.exportArchive()"><AppIcon name="download" :size="17" /> 导出存档</button>
         <button class="ghost" data-testid="p15:export-report" @click="game.exportReport()">导出试玩报告</button>
         <button class="ghost" data-testid="p15:manage" @click="manageOpen = !manageOpen">本机数据管理</button>
         <button class="ghost" data-testid="p15:restart" @click="confirmWipe = true">重新开始</button>
         <RouterLink to="/" class="button ghost" data-testid="p15:exit">退出</RouterLink>
       </div>
+      <details class="audit-details">
+        <summary>技术审计详情</summary>
+        <p class="muted small mono">内部触发：{{ data.trigger }}</p>
+      </details>
       <div v-if="manageOpen" class="manage" data-testid="p15:manage-panel">
         <p class="muted small">分别处理；删除录音不撤销你的见证事实，清除进度不可恢复。</p>
         <button class="ghost" data-testid="p15:delete-recordings" @click="deleteRecordings">删除本机录音</button>
@@ -105,11 +110,15 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
 </template>
 
 <style scoped>
+.eyebrow { margin: 0 0 var(--space-2); color: var(--clinical); font-size: .7rem; font-weight: 750; letter-spacing: .12em; }
+.result-panel { border-top-width: 3px; }
 .body { white-space: pre-wrap; font-size: 1.05em; line-height: 1.8; }
 .ui { background: #eef1ef; border-radius: var(--radius); padding: var(--space-2) var(--space-3); }
 .followups { padding-left: var(--space-4); }
 .followups li { margin: var(--space-1) 0; }
 .actionrow { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+.audit-details { margin-top: var(--space-4); border-top: 1px solid var(--line); padding-top: var(--space-3); }
+.audit-details summary { color: var(--muted); font-size: .76rem; }
 .manage { border-top: 1px solid var(--line); margin-top: var(--space-3); padding-top: var(--space-3); display: flex; gap: var(--space-3); flex-wrap: wrap; }
 .danger { color: var(--error); }
 .modal { position: fixed; inset: 0; background: rgba(20, 30, 26, 0.45); display: flex; align-items: center; justify-content: center; z-index: 60; }

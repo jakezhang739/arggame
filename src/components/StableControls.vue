@@ -5,6 +5,7 @@ import { useGameStore } from '../stores/game';
 import { useSettingsStore } from '../stores/settings';
 import { formatGameTime } from '../game/selectors';
 import type { SettingsData } from '../game/types';
+import AppIcon from './AppIcon.vue';
 
 const router = useRouter();
 const game = useGameStore();
@@ -40,14 +41,16 @@ function exit(): void {
 
 <template>
   <div class="controls">
-    <button class="control-button" data-testid="controls:exit" @click="exit">退出</button>
+    <button class="control-button" data-testid="controls:exit" @click="exit">
+      <AppIcon name="exit" :size="17" /> <span>退出</span>
+    </button>
     <button
       class="control-button"
       data-testid="controls:settings"
       @click="showSettings = !showSettings"
       :aria-expanded="showSettings"
     >
-      设置
+      <AppIcon name="settings" :size="17" /> <span>设置</span>
     </button>
     <button
       class="control-button"
@@ -55,7 +58,7 @@ function exit(): void {
       :aria-pressed="settings.data.subtitles"
       @click="settings.update({ subtitles: !settings.data.subtitles })"
     >
-      字幕：{{ settings.data.subtitles ? '开' : '关' }}
+      <AppIcon name="headphones" :size="17" /> <span>字幕：{{ settings.data.subtitles ? '开' : '关' }}</span>
     </button>
     <span class="clock mono" data-testid="controls:clock" aria-label="游戏内时间">
       <span class="clock-status" aria-hidden="true"></span>

@@ -2,6 +2,8 @@
 import { computed } from 'vue';
 import FakeAddressBar from '../components/FakeAddressBar.vue';
 import StableControls from '../components/StableControls.vue';
+import InvestigationRail from '../components/InvestigationRail.vue';
+import AppIcon from '../components/AppIcon.vue';
 
 const props = defineProps<{ address?: string; skin?: string }>();
 
@@ -14,13 +16,20 @@ const system = computed(() => {
   };
   return systems[props.skin ?? 'hospital'] ?? systems.hospital;
 });
+
+const nightImage = `${import.meta.env.BASE_URL}images/night-shift-hero-v2.webp`;
+const archiveImage = `${import.meta.env.BASE_URL}images/archive-desk-v2.webp`;
+const layoutStyle = computed(() => ({
+  '--night-image': `url("${nightImage}")`,
+  '--archive-image': `url("${archiveImage}")`,
+}));
 </script>
 
 <template>
-  <div class="layout" :class="skin ? `skin-${skin}` : ''" :data-system="skin">
+  <div class="layout" :class="skin ? `skin-${skin}` : ''" :data-system="skin" :style="layoutStyle">
     <header class="layout-bar">
       <div class="system-identity">
-        <span class="system-mark mono" aria-hidden="true">{{ system.code }}</span>
+        <span class="system-mark mono" aria-hidden="true"><AppIcon name="archive" :size="16" /> {{ system.code }}</span>
         <div class="system-copy">
           <p class="system-name">
             {{ system.name }} <span>/ {{ system.desk }}</span>
@@ -30,9 +39,12 @@ const system = computed(() => {
       </div>
       <StableControls />
     </header>
-    <main class="layout-body">
-      <slot />
-    </main>
+    <div class="workspace-shell">
+      <main class="layout-body">
+        <slot />
+      </main>
+      <InvestigationRail />
+    </div>
     <footer class="layout-foot">
       <span class="foot-rule" aria-hidden="true"></span>
       <span>游戏内系统视图</span>
@@ -51,13 +63,17 @@ const system = computed(() => {
   flex-direction: column;
   background-color: var(--skin-background);
   background-image:
+    linear-gradient(180deg, rgba(228, 237, 232, .86) 0, var(--skin-background) 390px),
     linear-gradient(rgba(55, 78, 68, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(55, 78, 68, 0.025) 1px, transparent 1px),
-    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.68), transparent 34rem);
+    var(--night-image);
   background-size:
+    100% 520px,
     32px 32px,
     32px 32px,
-    auto;
+    100% 520px;
+  background-position: top 78px center, top, top, top 78px center;
+  background-repeat: no-repeat, repeat, repeat, no-repeat;
 }
 
 .layout-bar {
@@ -95,11 +111,13 @@ const system = computed(() => {
 }
 
 .system-mark {
-  display: grid;
-  width: 66px;
+  display: inline-flex;
+  min-width: 76px;
   height: 46px;
   flex: 0 0 auto;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   border: 1px solid color-mix(in srgb, var(--skin-accent) 65%, var(--line));
   background: var(--skin-accent);
   box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.16);
@@ -127,11 +145,19 @@ const system = computed(() => {
   font-weight: 560;
 }
 
-.layout-body {
+.workspace-shell {
   flex: 1;
-  width: min(var(--content-width), calc(100% - clamp(32px, 7vw, 96px)));
+  display: grid;
+  width: min(1440px, calc(100% - clamp(32px, 5vw, 80px)));
   margin: 0 auto;
-  padding: clamp(var(--space-6), 5vw, var(--space-7)) 0 72px;
+  grid-template-columns: minmax(0, 1fr) 294px;
+  gap: clamp(var(--space-4), 2.6vw, var(--space-6));
+  align-items: start;
+  padding: clamp(var(--space-6), 4vw, var(--space-7)) 0 72px;
+}
+
+.layout-body {
+  min-width: 0;
 }
 
 .layout-body :deep(> * > h1:first-child) {
@@ -177,11 +203,15 @@ const system = computed(() => {
   --skin-accent: #65725b;
   --skin-background: #ece9df;
   background-image:
+    linear-gradient(180deg, rgba(236, 233, 223, .9) 0, var(--skin-background) 360px),
     radial-gradient(circle at 12% -5%, rgba(255, 255, 255, 0.65), transparent 32rem),
     linear-gradient(rgba(84, 78, 62, 0.025) 1px, transparent 1px);
   background-size:
+    100% 420px,
     auto,
     100% 28px;
+  background-position: top 78px center, top, top;
+  background-repeat: no-repeat, no-repeat, repeat;
 }
 
 .skin-archive {
@@ -192,24 +222,32 @@ const system = computed(() => {
   --line: #d6cbbb;
   --line-strong: #ad9e89;
   background-image:
+    linear-gradient(180deg, rgba(240, 234, 223, .7) 0, var(--skin-background) 430px),
     linear-gradient(90deg, rgba(116, 87, 54, 0.025) 1px, transparent 1px),
-    radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.6), transparent 38rem);
+    var(--archive-image);
   background-size:
+    100% 520px,
     40px 40px,
-    auto;
+    100% 520px;
+  background-position: top 78px center, top, top 78px center;
+  background-repeat: no-repeat, repeat, no-repeat;
 }
 
 .skin-lab {
   --skin-accent: #376b69;
   --skin-background: #e4ebea;
   background-image:
+    linear-gradient(180deg, rgba(228, 237, 235, .9) 0, var(--skin-background) 360px),
     linear-gradient(rgba(41, 78, 76, 0.038) 1px, transparent 1px),
     linear-gradient(90deg, rgba(41, 78, 76, 0.038) 1px, transparent 1px),
     radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.7), transparent 36rem);
   background-size:
+    100% 420px,
     24px 24px,
     24px 24px,
     auto;
+  background-position: top 78px center, top, top, top;
+  background-repeat: no-repeat, repeat, repeat, no-repeat;
 }
 
 .skin-forum :deep(.post) {
@@ -257,7 +295,7 @@ const system = computed(() => {
     min-width: 120px;
   }
 
-  .layout-body {
+  .workspace-shell {
     width: min(100% - 28px, var(--content-width));
     padding-top: var(--space-6);
     padding-bottom: 88px;
@@ -267,6 +305,12 @@ const system = computed(() => {
     flex-wrap: wrap;
     padding-right: 80px;
     text-align: center;
+  }
+}
+
+@media (max-width: 1020px) {
+  .workspace-shell {
+    grid-template-columns: 1fr;
   }
 }
 

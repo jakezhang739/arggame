@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useGameStore } from '../stores/game';
 import { useAudioStore } from '../stores/audio';
 import { useSettingsStore } from '../stores/settings';
+import AppIcon from '../components/AppIcon.vue';
 
 const router = useRouter();
 const game = useGameStore();
@@ -11,9 +12,12 @@ const audio = useAudioStore();
 const settings = useSettingsStore();
 const importError = ref<string | null>(null);
 const importing = ref(false);
-const deskPhotoUrl = `${import.meta.env.BASE_URL}images/nurse-desk.png`;
+const heroUrl = `${import.meta.env.BASE_URL}images/night-shift-hero-v2.webp`;
+const pageStyle = computed(() => ({ '--hero-image': `url("${heroUrl}")` }));
+const unsafeOrigin = computed(() => typeof window !== 'undefined' && !window.isSecureContext);
 
 function startNew(): void {
+  if (unsafeOrigin.value) return;
   if (game.hasSave) {
     if (!window.confirm('开始新的一局将覆盖当前进度。建议先导出本局档案。仍要继续吗？')) return;
   }
@@ -44,51 +48,72 @@ async function onImportFile(e: Event): Promise<void> {
 </script>
 
 <template>
-  <main class="start">
+  <main class="start" :style="pageStyle">
+    <div class="grain" aria-hidden="true"></div>
+    <header class="topline">
+      <span class="terminal-mark mono"><AppIcon name="moon" :size="15" /> CW·W07</span>
+      <span class="connection"><i aria-hidden="true"></i> 本机调查记录</span>
+    </header>
+
     <div class="start-shell">
-      <section class="visual" aria-label="空置的护士站值班台">
-        <img :src="deskPhotoUrl" alt="夜间护士站里，一盏旧台灯照着交接文件。" />
-        <div class="visual-shade"></div>
-        <div class="brand">
-          <p class="brand-code mono">CHENGWAN / CASE 0617</p>
-          <h2>明日随访</h2>
-          <p>一份应该继续的记录，正在等待下一班。</p>
+      <section class="story" aria-label="明日随访简介">
+        <p class="eyebrow mono">CHENGWAN / NIGHT REVIEW / CASE 0617</p>
+        <h1>明日随访</h1>
+        <p class="premise">你将接手一次夜班外部复核。<br />六名患者，只有一份记录等待签认。</p>
+
+        <div class="assignment">
+          <div><AppIcon name="users" /><span><strong>6 名在册患者</strong><small>核对身份与当前照护</small></span></div>
+          <div><AppIcon name="clipboard" /><span><strong>1 份待签记录</strong><small>阅读无害，提交前会再次确认</small></span></div>
+          <div><AppIcon name="evidence" /><span><strong>本机保存证据</strong><small>不需要医学知识或外部账号</small></span></div>
         </div>
-        <p class="visual-caption mono">NIGHT DESK · 03:17</p>
+
+        <blockquote>“她没有要求你救她。她只是让你明天带一颗螺丝。”</blockquote>
       </section>
 
-      <section class="login panel" aria-label="外部复核终端">
-        <header class="terminal-head">
-          <span class="terminal-mark mono">CW·W07</span>
-          <span class="terminal-status"><i aria-hidden="true"></i> 本机连接</span>
-        </header>
-        <p class="eyebrow mono">EXTERNAL REVIEW TERMINAL</p>
-        <h1>外部复核终端</h1>
-        <p class="waiting"><span aria-hidden="true"></span>等待交接</p>
+      <section class="terminal" aria-label="开始游戏">
+        <div class="terminal-head">
+          <span class="mono">EXTERNAL REVIEW TERMINAL</span>
+          <span>值班接入 03:17</span>
+        </div>
+        <p class="section-label">今晚的任务</p>
+        <h2>{{ game.hasSave ? '继续未完成的调查' : '完成第一次外部复核' }}</h2>
+        <p class="terminal-copy">
+          {{ game.hasSave ? '你的本机记录仍在。继续时会回到最近一个可执行任务。' : '先保存复核前名单，再核对 R03 的护理事实。任何改变案件状态的提交都会二次确认。' }}
+        </p>
+
+        <div v-if="unsafeOrigin" class="security-warning" role="alert">
+          <AppIcon name="warning" />
+          <span><strong>当前地址不能安全保存进度</strong>请使用 HTTPS 或本机 localhost 地址打开后再开始。</span>
+        </div>
+
         <div class="actions">
           <button
             v-if="game.hasSave"
-            class="primary"
+            class="primary main-action"
             data-testid="start:continue"
             @click="continueGame"
           >
-            继续上次会话
+            <span>继续上次调查</span><AppIcon name="arrow" />
           </button>
-          <button :class="game.hasSave ? '' : 'primary'" data-testid="start:new" @click="startNew">
-            新建 W07 会话
+          <button
+            :class="game.hasSave ? 'secondary-action' : 'primary main-action'"
+            :disabled="unsafeOrigin"
+            data-testid="start:new"
+            @click="startNew"
+          >
+            <span>{{ game.hasSave ? '重新开始' : '开始第一次复核' }}</span><AppIcon name="arrow" />
           </button>
-          <label class="import">
-            <span class="action-label">导入本局档案</span>
-            <input
-              type="file"
-              accept=".json,application/json"
-              data-testid="start:import"
-              @change="onImportFile"
-            />
-          </label>
+        </div>
+
+        <div class="session-facts" aria-label="体验说明">
+          <span>约 120—150 分钟</span><span>可随时暂停</span><span>全程字幕</span>
+        </div>
+
+        <details class="advanced">
+          <summary>声音、字幕与档案导入</summary>
           <div class="utilities">
             <button class="ghost" data-testid="start:soundtest" @click="audio.testBeep()">
-              声音测试
+              <AppIcon name="headphones" :size="17" /> 声音测试
             </button>
             <button
               class="ghost"
@@ -98,279 +123,102 @@ async function onImportFile(e: Event): Promise<void> {
               字幕：{{ settings.data.subtitles ? '开' : '关' }}
             </button>
           </div>
-        </div>
+          <label class="import">
+            <span class="action-label">导入之前导出的本局档案</span>
+            <input
+              type="file"
+              accept=".json,application/json"
+              data-testid="start:import"
+              :disabled="importing"
+              @change="onImportFile"
+            />
+          </label>
+        </details>
+
         <p v-if="importError" class="anomaly-text">{{ importError }}</p>
-        <p v-if="game.loadError" class="muted">
-          本地存档读取失败：{{ game.loadError }}（可新建会话继续）
-        </p>
-        <p class="local-note">
-          <span class="mono">LOCAL ONLY</span> 进度与录音只保存在当前浏览器。
-        </p>
+        <p v-if="game.loadError" class="muted">本地存档读取失败：{{ game.loadError }}（可新建会话继续）</p>
+        <p class="local-note"><AppIcon name="archive" :size="15" /> 进度与录音只保存在当前浏览器，不会上传。</p>
       </section>
     </div>
 
-    <footer class="intro muted">
-      <p class="intro-lead">这是一部虚构互动作品。人物、机构与案件均为原创。</p>
-      <p>预计用时 180–240 分钟 · 建议使用电脑与耳机 · 纸笔可选 · 可随时暂停续玩</p>
+    <footer>
+      <span>虚构互动作品</span><i></i><span>人物、机构与案件均为原创</span><i></i><span>建议使用电脑与耳机</span>
     </footer>
   </main>
 </template>
 
 <style scoped>
 .start {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-5);
-  padding: clamp(var(--space-4), 4vw, var(--space-7));
-  background:
-    linear-gradient(90deg, rgba(31, 63, 51, 0.035) 1px, transparent 1px),
-    linear-gradient(rgba(31, 63, 51, 0.035) 1px, transparent 1px), #dfe6e1;
-  background-size: 32px 32px;
-}
-.start-shell {
-  display: grid;
-  width: min(1080px, 100%);
-  min-height: min(680px, calc(100vh - 150px));
-  grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
-  overflow: hidden;
-  border: 1px solid #98a69e;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow:
-    0 28px 75px rgba(16, 37, 29, 0.19),
-    0 3px 9px rgba(16, 37, 29, 0.11);
-}
-.visual {
   position: relative;
-  min-height: 560px;
+  min-height: 100vh;
   overflow: hidden;
-  background: var(--room-black);
-  color: #fff;
-}
-.visual img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 54% center;
-  filter: saturate(0.78) contrast(1.04) brightness(0.82);
-}
-.visual-shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(5, 16, 12, 0.08) 25%, rgba(5, 16, 12, 0.78) 100%),
-    linear-gradient(90deg, rgba(5, 16, 12, 0.12), transparent 55%);
-}
-.brand {
-  position: absolute;
-  right: var(--space-6);
-  bottom: var(--space-7);
-  left: var(--space-6);
-  max-width: 520px;
-}
-.brand-code,
-.eyebrow {
-  margin: 0 0 var(--space-2);
-  font-size: 0.69rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-}
-.brand-code {
-  color: rgba(225, 236, 229, 0.8);
-}
-.brand h2 {
-  margin: 0 0 var(--space-3);
-  color: #fff;
-  font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 5vw, 4.5rem);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
-}
-.brand p:last-child {
-  margin: 0;
-  color: rgba(242, 246, 243, 0.84);
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-}
-.visual-caption {
-  position: absolute;
-  top: var(--space-5);
-  left: var(--space-5);
-  margin: 0;
-  color: rgba(235, 242, 238, 0.68);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-}
-.login {
-  display: flex;
-  width: auto;
-  flex-direction: column;
-  justify-content: center;
-  border: 0;
-  border-radius: 0;
-  padding: clamp(var(--space-5), 4vw, var(--space-7));
-  background:
-    linear-gradient(90deg, var(--clinical) 0 54px, transparent 54px) top left / 100% 3px no-repeat,
-    rgba(249, 251, 249, 0.98);
-  box-shadow: none;
-}
-.terminal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-6);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: var(--space-3);
-}
-.terminal-mark {
-  background: var(--clinical-deep);
-  padding: 5px var(--space-2);
-  color: #fff;
-  font-size: 0.68rem;
-  font-weight: 750;
-  letter-spacing: 0.08em;
-}
-.terminal-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 0.7rem;
-}
-.terminal-status i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #5b856f;
-  box-shadow: 0 0 0 3px rgba(36, 90, 72, 0.1);
-}
-.login h1 {
-  margin: 0;
-  font-size: clamp(1.65rem, 3vw, 2.15rem);
-  letter-spacing: -0.03em;
-}
-.eyebrow {
-  color: var(--clinical);
-}
-.waiting {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin: var(--space-2) 0 var(--space-5);
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-.waiting span {
-  width: 18px;
-  height: 2px;
-  background: var(--warning);
-}
-.actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  align-items: stretch;
+  padding: clamp(20px, 4vw, 54px);
+  background:
+    linear-gradient(90deg, rgba(5, 15, 12, .28), rgba(5, 15, 12, .72) 58%, rgba(5, 15, 12, .94)),
+    linear-gradient(0deg, rgba(4, 12, 10, .7), transparent 45%),
+    var(--hero-image) center / cover no-repeat;
+  color: #eef5f1;
 }
-.actions > button {
-  width: 100%;
-  min-height: 46px;
-}
-.import {
-  display: grid;
-  gap: 6px;
-}
-.action-label {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-}
-.import input {
-  width: 100%;
-}
-.utilities {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-}
-.local-note {
-  margin: var(--space-5) 0 0;
-  border-top: 1px solid var(--line);
-  padding-top: var(--space-3);
-  color: var(--muted);
-  font-size: 0.72rem;
-}
-.local-note .mono {
-  margin-right: var(--space-1);
-  color: var(--clinical);
-  font-size: 0.67rem;
-  font-weight: 750;
-  letter-spacing: 0.08em;
-}
-.intro {
-  text-align: center;
-  font-size: 0.76rem;
-  max-width: 760px;
-}
-.intro p {
-  margin: var(--space-1) 0;
-}
-.intro-lead {
-  color: var(--text);
-}
+.grain { position: absolute; inset: 0; pointer-events: none; opacity: .16; background-image: radial-gradient(rgba(255,255,255,.2) .5px, transparent .5px); background-size: 4px 4px; mix-blend-mode: overlay; }
+.topline { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; width: min(1420px, 100%); margin: 0 auto; }
+.terminal-mark { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(214,228,220,.42); padding: 8px 12px; color: #fff; font-size: .72rem; font-weight: 750; letter-spacing: .08em; }
+.connection { display: inline-flex; align-items: center; gap: 8px; color: #c4d1ca; font-size: .74rem; }
+.connection i { width: 7px; height: 7px; border-radius: 50%; background: #91b39f; box-shadow: 0 0 0 4px rgba(145,179,159,.12); }
+.start-shell { position: relative; z-index: 1; flex: 1; display: grid; width: min(1420px, 100%); margin: 0 auto; grid-template-columns: minmax(0, 1.35fr) minmax(390px, .65fr); gap: clamp(40px, 7vw, 110px); align-items: center; padding: clamp(42px, 7vh, 90px) 0; }
+.story { max-width: 720px; align-self: end; padding-bottom: clamp(12px, 4vh, 48px); }
+.eyebrow { margin: 0 0 var(--space-3); color: #c7d4cd; font-size: .74rem; font-weight: 700; letter-spacing: .16em; }
+.story h1 { margin: 0; color: #fff; font-family: var(--font-serif); font-size: clamp(3.8rem, 7.5vw, 7.7rem); font-weight: 500; letter-spacing: .09em; line-height: 1; text-shadow: 0 8px 30px rgba(0,0,0,.32); }
+.premise { margin: var(--space-5) 0; color: #edf3ef; font-size: clamp(1.15rem, 1.9vw, 1.55rem); line-height: 1.7; letter-spacing: .04em; }
+.assignment { display: grid; max-width: 680px; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(228,238,232,.25); border-bottom: 1px solid rgba(228,238,232,.25); }
+.assignment > div { display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding: var(--space-4) var(--space-3); border-right: 1px solid rgba(228,238,232,.18); }
+.assignment > div:last-child { border-right: 0; }
+.assignment span { display: grid; }
+.assignment strong { color: #f4f7f5; font-size: .82rem; }
+.assignment small { color: #aebdb5; font-size: .7rem; line-height: 1.45; }
+.story blockquote { margin: var(--space-5) 0 0; border-left-color: #d0a44d; color: #d8e1dc; font-family: var(--font-serif); font-size: 1rem; letter-spacing: .05em; }
+.terminal { align-self: center; border: 1px solid rgba(180,200,190,.42); border-radius: var(--radius-lg); padding: clamp(24px, 3.5vw, 42px); background: rgba(241,246,242,.95); box-shadow: 0 30px 80px rgba(0,0,0,.38); color: var(--text); backdrop-filter: blur(14px); }
+.terminal-head { display: flex; justify-content: space-between; gap: var(--space-3); margin: -4px 0 var(--space-6); border-bottom: 1px solid var(--line); padding-bottom: var(--space-3); color: var(--muted); font-size: .66rem; letter-spacing: .08em; }
+.section-label { margin: 0 0 var(--space-1); color: var(--warning); font-size: .72rem; font-weight: 750; letter-spacing: .1em; }
+.terminal h2 { margin: 0; font-size: clamp(1.55rem, 2.4vw, 2.15rem); }
+.terminal-copy { margin: var(--space-3) 0 var(--space-5); color: var(--muted); font-size: .9rem; line-height: 1.75; }
+.actions { display: grid; gap: var(--space-2); }
+.main-action { width: 100%; min-height: 52px; justify-content: space-between; padding-inline: var(--space-5); font-size: 1rem; }
+.secondary-action { width: 100%; }
+.session-facts { display: flex; gap: 0; margin: var(--space-4) 0; color: var(--muted); font-size: .7rem; }
+.session-facts span { border-right: 1px solid var(--line); padding: 0 var(--space-2); }
+.session-facts span:first-child { padding-left: 0; }
+.session-facts span:last-child { border-right: 0; }
+.advanced { border-top: 1px solid var(--line); padding-top: var(--space-3); }
+.advanced summary { color: var(--muted); font-size: .76rem; }
+.utilities { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-top: var(--space-3); }
+.import { display: grid; gap: 6px; margin-top: var(--space-3); }
+.action-label { color: var(--muted); font-size: .72rem; font-weight: 650; }
+.local-note { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-4) 0 0; color: var(--muted); font-size: .7rem; }
+.security-warning { display: grid; grid-template-columns: 24px 1fr; gap: var(--space-2); margin-bottom: var(--space-4); border: 1px solid #c58a83; border-radius: var(--radius); padding: var(--space-3); background: var(--anomaly-soft); color: var(--anomaly); }
+.security-warning span { display: grid; font-size: .78rem; }
+.start footer { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: var(--space-3); color: #aebbb4; font-size: .68rem; letter-spacing: .04em; }
+.start footer i { width: 3px; height: 3px; border-radius: 50%; background: #75857d; }
 
-@media (max-width: 900px) {
-  .start-shell {
-    grid-template-columns: 1fr;
-  }
-  .visual {
-    min-height: 360px;
-  }
-  .login {
-    padding: var(--space-6);
-  }
+@media (max-width: 980px) {
+  .start { overflow: auto; }
+  .start-shell { grid-template-columns: 1fr; align-items: start; }
+  .story { align-self: auto; padding-bottom: 0; }
+  .terminal { width: min(620px, 100%); }
 }
-
-@media (max-width: 560px) {
-  .start {
-    justify-content: flex-start;
-    padding: 0;
-  }
-  .start-shell {
-    min-height: 100vh;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .visual {
-    min-height: 300px;
-  }
-  .brand {
-    right: var(--space-4);
-    bottom: var(--space-5);
-    left: var(--space-4);
-  }
-  .brand h2 {
-    font-size: 2.4rem;
-  }
-  .visual-caption {
-    top: var(--space-4);
-    left: var(--space-4);
-  }
-  .login {
-    padding: var(--space-5) var(--space-4) var(--space-6);
-  }
-  .terminal-head {
-    margin-bottom: var(--space-5);
-  }
-  .intro {
-    padding: var(--space-4);
-  }
+@media (max-width: 620px) {
+  .start { padding: var(--space-4); background-position: 35% center; }
+  .topline { align-items: flex-start; }
+  .connection { max-width: 120px; justify-content: flex-end; text-align: right; }
+  .start-shell { gap: var(--space-5); padding: var(--space-6) 0; }
+  .story h1 { font-size: 3.25rem; }
+  .premise { font-size: 1rem; }
+  .assignment { grid-template-columns: 1fr; }
+  .assignment > div { border-right: 0; border-bottom: 1px solid rgba(228,238,232,.18); }
+  .assignment > div:last-child { border-bottom: 0; }
+  .story blockquote { display: none; }
+  .terminal { padding: var(--space-5) var(--space-4); }
+  .terminal-head { align-items: flex-start; flex-direction: column; }
 }
 </style>

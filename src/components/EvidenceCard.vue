@@ -4,6 +4,7 @@ import { useGameStore } from '../stores/game';
 import { canOpenEvidence, evidenceView, isAcquired } from '../game/selectors';
 import { content } from '../game/content';
 import type { EvidenceId } from '../game/content-ids';
+import AppIcon from './AppIcon.vue';
 
 const props = defineProps<{ id: string }>();
 const game = useGameStore();
@@ -19,6 +20,7 @@ const pinned = computed(() => game.save.pinnedEvidence.includes(id.value));
 <template>
   <article v-if="item" class="ev-card" :data-testid="`ev:card--${id}`">
     <header class="ev-head">
+      <span class="ev-icon"><AppIcon name="evidence" :size="17" /></span>
       <h3>{{ item.title }}</h3>
       <span class="badge">{{
         item.sourceType === 'PLAYER_LOCAL'
@@ -34,7 +36,7 @@ const pinned = computed(() => game.save.pinnedEvidence.includes(id.value));
         data-testid="ev:pin"
         @click.stop="game.togglePin(id)"
       >
-        {{ pinned ? '取消钉住' : '钉住' }}
+        {{ pinned ? '移出对照' : '加入对照' }}
       </button>
     </header>
     <template v-if="acquired">
@@ -45,7 +47,7 @@ const pinned = computed(() => game.save.pinnedEvidence.includes(id.value));
     </template>
     <template v-else-if="openable">
       <button data-testid="ev:open" @click="game.execute({ kind: 'openDoc', documentId: id })">
-        打开
+        查看这份材料 <AppIcon name="arrow" :size="16" />
       </button>
     </template>
     <p v-else class="muted small">尚未开放。</p>
@@ -77,6 +79,7 @@ const pinned = computed(() => game.save.pinnedEvidence.includes(id.value));
   align-items: center;
   gap: var(--space-2);
 }
+.ev-icon { display: grid; width: 30px; height: 30px; place-items: center; border-radius: var(--radius-sm); background: var(--clinical-soft); color: var(--clinical); }
 .ev-head h3 {
   margin: 0;
   font-size: 1em;

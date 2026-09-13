@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useGameStore } from '../stores/game';
 import { formatGameTime } from '../game/selectors';
 
@@ -8,6 +8,7 @@ defineProps<{ mode: 'drawer' | 'full' }>();
 const game = useGameStore();
 const open = ref(false);
 const expandedSeq = ref<number | null>(null);
+const title = computed(() => game.state.facts.trailForkCreated ? '叙事轨迹' : '调查记录');
 
 function toggle(): void {
   open.value = !open.value;
@@ -26,8 +27,18 @@ function onKeyDown(e: KeyboardEvent): void {
   }
 }
 
-onMounted(() => window.addEventListener('keydown', onKeyDown));
-onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
+function openFromToolbar(): void {
+  open.value = true;
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('cw:open-trail', openFromToolbar);
+});
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeyDown);
+  window.removeEventListener('cw:open-trail', openFromToolbar);
+});
 </script>
 
 <template>
@@ -39,18 +50,18 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
       aria-controls="trail-drawer"
       @click="toggle"
     >
-      <span>叙事轨迹</span>
+      <span>{{ title }}</span>
       <span class="trail-count mono" aria-hidden="true">{{ game.trailRows.length }}</span>
     </button>
     <aside
       id="trail-drawer"
       class="trail-drawer"
       :hidden="!open"
-      aria-label="叙事轨迹"
+      :aria-label="title"
       role="region"
     >
       <header class="trail-head">
-        <h2>叙事轨迹</h2>
+        <h2>{{ title }}</h2>
         <button data-testid="trail:close" @click="toggle">收起</button>
       </header>
       <ol class="trail-list">

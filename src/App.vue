@@ -8,6 +8,7 @@ import LabLayout from './layouts/LabLayout.vue';
 import PlainLayout from './layouts/PlainLayout.vue';
 import NarrativeTrail from './components/NarrativeTrail.vue';
 import DebugPanel from './components/DebugPanel.vue';
+import AppIcon from './components/AppIcon.vue';
 import { useSettingsStore } from './stores/settings';
 import { useGameStore } from './stores/game';
 
@@ -15,6 +16,7 @@ const route = useRoute();
 const settings = useSettingsStore();
 const game = useGameStore();
 const isDev = import.meta.env.DEV;
+const showDebug = computed(() => isDev && route.query.debug === '1');
 function reload(): void {
   window.location.reload();
 }
@@ -32,6 +34,7 @@ const layoutComp = computed(() => {
   return (name && layouts[name]) || 'div';
 });
 const showTrail = computed(() => route.meta.trail !== false && route.name !== 'start');
+const unsafeOrigin = computed(() => typeof window !== 'undefined' && !window.isSecureContext);
 
 onMounted(() => {
   document.documentElement.style.fontSize = `${16 * settings.data.textScale}px`;
@@ -48,9 +51,18 @@ watch(
   <component :is="layoutComp" :address="(route.meta.address as string) ?? ''">
     <RouterView />
   </component>
-  <div v-if="!game.lockHeld" class="global-notice" role="alert" data-testid="banner:temp-mode">
+  <div v-if="unsafeOrigin" class="global-notice error" role="alert" data-testid="banner:unsafe-origin">
+    <AppIcon name="warning" :size="18" />
+    当前打开方式无法建立安全存档。请使用 HTTPS 或本机 localhost 地址重新打开。
+  </div>
+  <div v-else-if="!game.lockHeld" class="global-notice" role="alert" data-testid="banner:temp-mode">
     另一窗口正在推进本存档。此窗口为临时视图（不写入）。
     <button class="ghost" @click="reload">重新载入接管</button>
+  </div>
+  <div v-else-if="game.commandError" class="global-notice error" role="alert" data-testid="banner:command-error">
+    <AppIcon name="warning" :size="18" />
+    {{ game.commandError }}
+    <button class="ghost" @click="game.clearCommandError">知道了</button>
   </div>
   <div
     v-else-if="game.externalUpdate"
@@ -62,7 +74,7 @@ watch(
     <button class="ghost" @click="reload">重新载入</button>
   </div>
   <NarrativeTrail v-if="showTrail" mode="drawer" />
-  <DebugPanel v-if="isDev" />
+  <DebugPanel v-if="showDebug" />
 </template>
 
 <style>
@@ -88,6 +100,15 @@ watch(
   min-height: 34px;
   border-color: #bda86f;
   color: #4e3911;
+}
+.global-notice.error {
+  background: rgba(67, 25, 23, 0.97);
+  border-bottom-color: #b36a63;
+  color: #fff1ef;
+}
+.global-notice.error button {
+  border-color: rgba(255, 255, 255, .38);
+  color: #fff;
 }
 @media (max-width: 640px) {
   .global-notice {

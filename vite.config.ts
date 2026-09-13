@@ -12,6 +12,8 @@ export default defineConfig({
   plugins: [vue()],
   test: {
     environment: 'node',
-    include: ['tests/**/*.spec.ts'],
+    // Playwright suites have their own runner/config. Keep Vitest focused on
+    // deterministic store and state-machine unit tests.
+    include: ['tests/reducer/**/*.spec.ts'],
   },
 });

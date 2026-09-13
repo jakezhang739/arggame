@@ -35,9 +35,9 @@ const stUnlocked = computed(() => statementUnlocked(game.state, stId.value));
 const stCaptured = computed(() => game.state.facts.capturedStatements.includes(stId.value as never));
 
 const STATEMENT_PAGE_HINT: Record<string, string> = {
-  R01: '本人当前陈述在病友留言板（P06）出现后可采集。',
-  R02: '本人当前陈述在病友留言板（P06）出现后可采集。',
-  R03: 'R03 的有效当前意愿来自通道 03 完整录音（P12）。',
+  R01: '先在病友留言板确认这段话确实由本人留下。',
+  R02: '先在病友留言板确认这段话确实由本人留下。',
+  R03: 'R03 的有效当前意愿需要由通道 03 的完整录音确认。',
 };
 
 async function capture(): Promise<void> {
@@ -87,7 +87,7 @@ if (!patient.value) {
         <blockquote v-if="isR03" class="statement">{{ statement }}</blockquote>
         <template v-else>
           <blockquote class="statement">{{ patient.selfStatement }}</blockquote>
-          <p v-if="stCaptured" class="ok">✓ 已保留这条本人陈述（{{ stId }}）。</p>
+          <p v-if="stCaptured" class="ok">✓ 已保留这条本人陈述（ST_{{ patient.id }}）</p>
           <button
             v-else-if="stUnlocked"
             class="primary"
@@ -111,7 +111,7 @@ if (!patient.value) {
         <h2>来源</h2>
         <template v-if="isR03">
           <button data-testid="p03:open-ev05" :disabled="ev05Acquired" @click="game.execute({ kind: 'openDoc', documentId: 'EV05' })">
-            {{ ev05Acquired ? '✓ 护理事实与授权说明（EV05）已取得' : '打开护理事实与授权说明（EV05）' }}
+            {{ ev05Acquired ? '✓ 护理事实与授权说明（EV05）已取得' : '查看护理事实与授权范围' }}
           </button>
         </template>
         <button data-testid="p03:source" @click="showSource = !showSource">来源检查</button>

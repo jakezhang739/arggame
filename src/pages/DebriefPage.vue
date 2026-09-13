@@ -38,23 +38,27 @@ const endingRows = computed(() =>
   (['A', 'B', 'C'] as const).map((id) => ({
     id,
     title: (content.endings[id] as { title: string }).title,
-    trigger: (content.endings[id] as { trigger: string }).trigger,
+    trigger: {
+      A: '接受批次终局，并把外部复核作为最终签认。',
+      B: '切断公示出口，把六份记录留在隔离批次中。',
+      C: '只见证护理事实，撤销终局授权，并建立下一班承接。',
+    }[id],
     actual: game.state.ending === id,
   })),
 );
 
 const PUZZLE_LABEL: Record<string, string> = {
-  p1: 'p1 异常复查',
-  p2: 'p2 时间线',
-  m7: 'M-7 架构判断',
-  p3: 'p3 三联',
-  p4: 'p4 来源标记',
-  rnm: 'R-NM 接口判断',
-  p5: 'p5 实验对照',
-  p6: 'p6 轨迹异议',
-  a1: 'a1 录音排序',
-  p7: 'p7 切除模拟',
-  p8: 'p8 下一班',
+  p1: '身份异常复查',
+  p2: '事件时间线',
+  m7: '七层架构判断',
+  p3: '外部观察席关联',
+  p4: '正负文档来源比较',
+  rnm: '终止接口判断',
+  p5: '归档副本实验',
+  p6: '调查记录异议',
+  a1: '交班录音重组',
+  p7: '连接切除模拟',
+  p8: '下一班依据',
 };
 </script>
 
@@ -85,8 +89,7 @@ const PUZZLE_LABEL: Record<string, string> = {
       <p v-if="attempts.length === 0" class="muted" data-testid="p16:no-attempts">本局未记录其他提交解释。</p>
       <ul v-else class="small" data-testid="p16:attempts">
         <li v-for="(a, i) in attempts" :key="i">
-          {{ PUZZLE_LABEL[a.puzzleId] ?? a.puzzleId }}：提交过
-          <span class="mono">{{ a.choiceKeys.filter(Boolean).join('，') || '（空）' }}</span>，未被证据支持。
+          {{ PUZZLE_LABEL[a.puzzleId] ?? '调查判断' }}：你提交过一个当时未被现有证据支持的解释。
         </li>
       </ul>
     </section>

@@ -128,42 +128,54 @@ export const useGameStore = defineStore('game', () => {
       return false;
     }
     return enqueue(async () => {
-      commandError.value = null;
-      const plan = planCommand(state.value, command);
-      if (!plan.ok) {
-        commandError.value = plan.error;
+      try {
+        commandError.value = null;
+        const plan = planCommand(state.value, command);
+        if (!plan.ok) {
+          commandError.value = plan.error;
+          return false;
+        }
+        if (isOnceDuplicate(plan.drafts)) {
+          commandError.value = '该操作已生效，不能重复提交。';
+          return false;
+        }
+        const txId =
+          typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `tx-${Date.now()}`;
+        const appended: GameEvent[] = [];
+        let prev = save.value.events.at(-1);
+        for (const d of plan.drafts) {
+          const ev = await buildEvent(
+            prev,
+            {
+              sessionId: save.value.sessionId,
+              elapsedMs: Math.max(elapsedNow(), prev?.elapsedMs ?? 0),
+              txId,
+              actor: d.actor,
+              ...(d.scope !== undefined ? { scope: d.scope } : {}),
+              code: d.code,
+              payload: d.payload as Record<string, unknown>,
+            },
+            sha256Hex,
+          );
+          appended.push(ev);
+          prev = ev;
+        }
+        save.value.events.push(...appended);
+        save.value.revision += 1;
+        persist();
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : '操作未能完成。';
+        commandError.value = message.includes('Web Crypto')
+          ? '当前打开方式不支持安全存档。请使用 HTTPS 或本机 localhost 地址重新打开；你的现有进度不会被改写。'
+          : `操作未能完成：${message}`;
         return false;
       }
-      if (isOnceDuplicate(plan.drafts)) {
-        commandError.value = '该操作已生效，不能重复提交。';
-        return false;
-      }
-      const txId =
-        typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `tx-${Date.now()}`;
-      const appended: GameEvent[] = [];
-      let prev = save.value.events.at(-1);
-      for (const d of plan.drafts) {
-        const ev = await buildEvent(
-          prev,
-          {
-            sessionId: save.value.sessionId,
-            elapsedMs: Math.max(elapsedNow(), prev?.elapsedMs ?? 0),
-            txId,
-            actor: d.actor,
-            ...(d.scope !== undefined ? { scope: d.scope } : {}),
-            code: d.code,
-            payload: d.payload as Record<string, unknown>,
-          },
-          sha256Hex,
-        );
-        appended.push(ev);
-        prev = ev;
-      }
-      save.value.events.push(...appended);
-      save.value.revision += 1;
-      persist();
-      return true;
     });
+  }
+
+  function clearCommandError(): void {
+    commandError.value = null;
   }
 
   async function ensureSnapshotLoaded(): Promise<void> {
@@ -305,6 +317,7 @@ export const useGameStore = defineStore('game', () => {
     save,
     loadError,
     commandError,
+    clearCommandError,
     state,
     trailRows,
     acquiredEvidence,
