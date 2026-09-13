@@ -1,0 +1,56 @@
+/*
+ * 《明日随访》视觉基线
+ * 冷静的机构档案界面，保留纸张、金属与值班灯光的轻微年代感。
+ * 异常色只用于真正需要警觉的内容，不把日常界面做成恐怖游戏。
+ */
+:root {
+  color-scheme: light;
+
+  --bg: #e9eeea;
+  --bg-deep: #dce4df;
+  --surface: #fbfcfa;
+  --surface-muted: #f1f4f1;
+  --surface-warm: #f5f0e6;
+  --text: #182520;
+  --text-strong: #0d1915;
+  --muted: #5e6e67;
+  --line: #c4cec8;
+  --line-strong: #94a49b;
+
+  --clinical: #245a48;
+  --clinical-deep: #143e32;
+  --clinical-soft: #dce9e2;
+  --primary: var(--clinical);
+  --warning: #805600;
+  --warning-soft: #f4ebd8;
+  --anomaly: #963630;
+  --anomaly-soft: #f3e1de;
+  --error: var(--anomaly);
+  --focus: #225da8;
+
+  --room-black: #101815;
+  --room-scarlet: #7e2528;
+  --paper: #f7f2e8;
+  --paper-line: #d9cfbd;
+
+  --font-sans:
+    'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  --font-serif: 'Songti SC', 'STSong', 'SimSun', 'Noto Serif SC', serif;
+  --font-mono: 'Cascadia Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --shadow-xs: 0 1px 1px rgba(11, 28, 21, 0.05);
+  --shadow-sm: 0 8px 24px rgba(22, 43, 35, 0.07), 0 1px 2px rgba(22, 43, 35, 0.08);
+  --shadow-md: 0 18px 50px rgba(11, 26, 20, 0.15), 0 2px 8px rgba(11, 26, 20, 0.08);
+  --content-width: 1180px;
+}

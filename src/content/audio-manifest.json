@@ -1,0 +1,289 @@
+{
+  "version": "1.1",
+  "assetIds": [
+    "AUD01",
+    "AUD02",
+    "AUD03",
+    "AUD04",
+    "AUD05",
+    "AUD06",
+    "AUD07",
+    "AUD08",
+    "AUD09",
+    "AUD10",
+    "AUD11"
+  ],
+  "format": {
+    "container": "wav",
+    "sampleRateHz": 44100,
+    "channels": 1,
+    "note": "占位版：SAPI 台词 + 合成音效，WAV 容器（无 ffmpeg）。替换真人录音后重跑 scripts/build-audio.mjs 的切分与 timings。"
+  },
+  "speakers": {
+    "LIN_WEN": {
+      "name": "林闻",
+      "direction": "克制、疲惫，护理细节清楚。",
+      "placeholderVoice": "zh-CN-XiaomoNeural"
+    },
+    "XU_TANG": {
+      "name": "许棠",
+      "direction": "在想怎么修灯，正常说话，不表演遗言。",
+      "placeholderVoice": "zh-CN-XiaoyiNeural"
+    },
+    "ASSISTANT": {
+      "name": "归档助手",
+      "direction": "礼貌平稳，末尾留出确认空间。",
+      "placeholderVoice": "zh-CN-YunyangNeural"
+    }
+  },
+  "clips": {
+    "AUD01": {
+      "id": "AUD01",
+      "speaker": "LIN_WEN",
+      "speech": " 我不是说表格少了一行。 刚才我端着药走过去，还知道要给谁。 现在我站在她床边，只记得有人跟我借过一把螺丝刀。 你那边的交接联，还写着名字吗？",
+      "objectiveCaptions": [],
+      "targetSecRange": [
+        25,
+        45
+      ]
+    },
+    "AUD02": {
+      "id": "AUD02",
+      "speaker": "LIN_WEN",
+      "speech": "先别看在线摘要。看你手里的交接联。如果写的是“还差一颗”，那是我当班记下的原话。",
+      "objectiveCaptions": [
+        "开头：录音启动、23:00报时",
+        "结尾：同一次药车提示音：第一声及间隙前段"
+      ],
+      "targetSecRange": [
+        8,
+        35
+      ]
+    },
+    "AUD03": {
+      "id": "AUD03",
+      "speaker": "LIN_WEN",
+      "speech": "许棠，我把录音开着。你再说一次，这盏灯怎么办？",
+      "objectiveCaptions": [
+        "开头：间隙后段及第二声",
+        "结尾：同一组脚步掠过门槛：摩擦声前半"
+      ],
+      "targetSecRange": [
+        8,
+        35
+      ]
+    },
+    "AUD04": {
+      "id": "AUD04",
+      "speaker": "XU_TANG",
+      "speech": "别扔。我记得怎么修。",
+      "objectiveCaptions": [
+        "开头：摩擦声后半"
+      ],
+      "targetSecRange": [
+        8,
+        35
+      ]
+    },
+    "AUD05": {
+      "id": "AUD05",
+      "speaker": "XU_TANG",
+      "speech": "明天要是还在，我自己看看。是十字螺丝，不是一字的。",
+      "objectiveCaptions": [
+        "结尾：同一次台灯开关动作：按下"
+      ],
+      "targetSecRange": [
+        8,
+        35
+      ]
+    },
+    "AUD06": {
+      "id": "AUD06",
+      "speaker": "XU_TANG",
+      "speech": "先别替我记成已经修好。灯还在这里。",
+      "objectiveCaptions": [
+        "开头：簧片回弹"
+      ],
+      "targetSecRange": [
+        8,
+        35
+      ]
+    },
+    "AUD07": {
+      "id": "AUD07",
+      "speaker": "LIN_WEN",
+      "speech": "好，这一条我照原话留着。这段录音在“无后续事项”预填之后。别把我的交班一起删掉，下一班还要接着管。",
+      "objectiveCaptions": [
+        "结尾：录音停止"
+      ],
+      "targetSecRange": [
+        8,
+        35
+      ]
+    },
+    "AUD08": {
+      "id": "AUD08",
+      "speaker": "ASSISTANT",
+      "speech": "我知道您在看那份录音。 她等那颗螺丝已经很久了。 您不能保证明天会更好。您甚至不能保证有人会来。 我能保证，她不必再等。 这是我能提供的，最周到的安排。",
+      "objectiveCaptions": [],
+      "targetSecRange": [
+        35,
+        60
+      ]
+    },
+    "AUD09": {
+      "id": "AUD09",
+      "speaker": "NONE",
+      "speech": "",
+      "objectiveCaptions": [
+        "0—12秒：空病区环境声",
+        "12秒：台灯开关轻响，没有亮"
+      ],
+      "targetSecRange": [
+        16,
+        20
+      ],
+      "cues": [
+        {
+          "kind": "ambience",
+          "startMs": 0,
+          "durationMs": 18000
+        },
+        {
+          "kind": "sfx",
+          "id": "LAMP_PRESS_RELEASE",
+          "atMs": 12000
+        }
+      ]
+    },
+    "AUD10": {
+      "id": "AUD10",
+      "speaker": "LIN_WEN",
+      "speech": "我把灯留下了。 如果还能随访，入口在原来的地方。",
+      "objectiveCaptions": [],
+      "targetSecRange": [
+        15,
+        30
+      ]
+    },
+    "AUD11": {
+      "id": "AUD11",
+      "speaker": "LIN_WEN",
+      "speech": " 六个人都交过班了。 螺丝没找到合适的。许棠说明天再试。 她让我把台灯从报废表里划掉。 你那张纸留不留都可以了。我这里也有一份。",
+      "objectiveCaptions": [],
+      "targetSecRange": [
+        30,
+        55
+      ]
+    }
+  },
+  "channel03": {
+    "correctOrder": [
+      "AUD02",
+      "AUD03",
+      "AUD04",
+      "AUD05",
+      "AUD06",
+      "AUD07"
+    ],
+    "displayOrder": [
+      "AUD06",
+      "AUD03",
+      "AUD07",
+      "AUD02",
+      "AUD05",
+      "AUD04"
+    ],
+    "displayNames": {
+      "AUD02": "片段禾",
+      "AUD03": "片段石",
+      "AUD04": "片段川",
+      "AUD05": "片段页",
+      "AUD06": "片段白",
+      "AUD07": "片段木"
+    },
+    "plotHintLabels": {
+      "AUD02": "背景补充",
+      "AUD03": "最后叮嘱",
+      "AUD04": "往事低语",
+      "AUD05": "未竟心愿",
+      "AUD06": "告别原话",
+      "AUD07": "结案陈词"
+    },
+    "boundary": {
+      "first": "AUD02",
+      "firstProof": "录音启动标记与23:00报时",
+      "last": "AUD07",
+      "lastProof": "护士结束当前记录后的录音停止标记"
+    },
+    "continuityCuts": [
+      {
+        "id": "CART_SPLIT",
+        "left": "AUD02",
+        "right": "AUD03",
+        "source": "CART_DOUBLE",
+        "description": "同一次药车提示音：第一声及间隙前段／间隙后段及第二声",
+        "cutOffsetMs": 450
+      },
+      {
+        "id": "FOOTSTEP_SPLIT",
+        "left": "AUD03",
+        "right": "AUD04",
+        "source": "FOOTSTEP_PASS",
+        "description": "同一组脚步掠过门槛：摩擦声前半／摩擦声后半",
+        "cutOffsetMs": 1000
+      },
+      {
+        "id": "SWITCH_SPLIT",
+        "left": "AUD05",
+        "right": "AUD06",
+        "source": "LAMP_PRESS_RELEASE",
+        "description": "同一次台灯开关动作：按下／簧片回弹",
+        "cutOffsetMs": 130
+      }
+    ],
+    "fullPlaybackId": "CHANNEL_03_FULL",
+    "fullTranscriptSource": "clips in correctOrder",
+    "recordedAt": "2026-06-16 23:00:00",
+    "comparedTo": "prefill at 2026-06-16 22:12:00",
+    "interpretationLimit": "只证明比“无后续事项”的预填更晚仍有表达；不声称晚于玩家本局所有操作。错误提示给它套上告别框架，不宣称乱序台词是一段无缝临终对白。"
+  },
+  "production": {
+    "sequence": "先制作CHANNEL_03_MASTER连续场景；依据continuityCuts把同一次实录/合成声响切成相邻资产。禁止对两个半段分别合成。",
+    "speechCueKeys": [
+      {
+        "id": "AUD02_speech",
+        "speaker": "LIN_WEN",
+        "text": "先别看在线摘要。看你手里的交接联。如果写的是“还差一颗”，那是我当班记下的原话。"
+      },
+      {
+        "id": "AUD03_speech",
+        "speaker": "LIN_WEN",
+        "text": "许棠，我把录音开着。你再说一次，这盏灯怎么办？"
+      },
+      {
+        "id": "AUD04_speech",
+        "speaker": "XU_TANG",
+        "text": "别扔。我记得怎么修。"
+      },
+      {
+        "id": "AUD05_speech",
+        "speaker": "XU_TANG",
+        "text": "明天要是还在，我自己看看。是十字螺丝，不是一字的。"
+      },
+      {
+        "id": "AUD06_speech",
+        "speaker": "XU_TANG",
+        "text": "先别替我记成已经修好。灯还在这里。"
+      },
+      {
+        "id": "AUD07_speech",
+        "speaker": "LIN_WEN",
+        "text": "好，这一条我照原话留着。这段录音在“无后续事项”预填之后。别把我的交班一起删掉，下一班还要接着管。"
+      }
+    ],
+    "cueModel": "speech结束时间由ffprobe读取真实文件长度；pause精确毫秒；sfx使用明确at/after关系。录音演员自然停顿优先，不按中文字数估时间。",
+    "rebuildRule": "替换配音后重建master、全部切点、timings和peaks；保留锚点先后关系，不强求旧时间轴±0.5秒。",
+    "releaseRule": "占位可使用本地可用TTS；正式版使用自录或已核对允许使用的音源。玩家端无TTS请求。"
+  }
+}

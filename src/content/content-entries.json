@@ -1,0 +1,81 @@
+[
+  {
+    "key": "patients.R03.name",
+    "default": "许棠",
+    "phaseVariants": [
+      {
+        "text": "",
+        "from": "R03_PREARCHIVED",
+        "untilExclusive": "IDENTITY_RESTORED"
+      }
+    ],
+    "endingOverrides": {
+      "A": "",
+      "B": "许棠（封存）",
+      "C": "许棠"
+    }
+  },
+  {
+    "key": "patients.R03.nameEvidenceTag",
+    "default": "",
+    "phaseVariants": [
+      {
+        "text": "依据：已核对的原始交接",
+        "from": "IDENTITY_RESTORED"
+      }
+    ]
+  },
+  {
+    "key": "patients.R03.statement",
+    "default": "台灯还差一颗螺丝，明天你来时帮我带一颗。",
+    "phaseVariants": [
+      {
+        "text": "台灯修好了。我走了。不用再来。",
+        "from": "CLOSURE_PROVEN"
+      }
+    ],
+    "endingOverrides": {
+      "A": "无后续事项",
+      "B": "封存前表达：台灯还差一颗螺丝。",
+      "C": "台灯还差一颗螺丝，明天你来时帮我带一颗。（下一班继续检查）"
+    }
+  },
+  {
+    "key": "evidence.EV04",
+    "default": "在册6；R01陈桥、R02宋渺、R03许棠、R04何川、R05邹宁、R06程枝。",
+    "phaseVariants": [
+      {
+        "text": "在册5；第三行记录关联缺失。其余五人姓名保持。",
+        "from": "R03_PREARCHIVED",
+        "untilExclusive": "IDENTITY_RESTORED"
+      },
+      {
+        "text": "在册6；R03许棠（依据：交接联00）。本批待整批复核。",
+        "from": "IDENTITY_RESTORED"
+      }
+    ],
+    "endingOverrides": {
+      "A": "在册0；待随访0。",
+      "B": "六份记录：封存·仍待联系。",
+      "C": "在册6；本次确认出院0；已恢复后续随访6。"
+    }
+  },
+  {
+    "key": "forum.authors",
+    "default": "原发帖人",
+    "phaseVariants": [
+      {
+        "text": "已离院用户",
+        "from": "THEATER_DISCOVERED"
+      }
+    ],
+    "endingOverrides": {
+      "C": "原发帖人"
+    }
+  },
+  {
+    "key": "witness.canonical",
+    "default": "我只确认许棠仍在表达，不确认她的结局。",
+    "phaseVariants": []
+  }
+]

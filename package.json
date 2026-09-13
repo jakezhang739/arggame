@@ -1,0 +1,30 @@
+{
+  "name": "arggame",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check:content": "vitest run tests/reducer/projection.spec.ts",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "format": "prettier --write \"src/**/*.{ts,vue,css,json}\" \"tests/**/*.ts\""
+  },
+  "dependencies": {
+    "pinia": "^4.0.3",
+    "vue": "^3.5.42",
+    "vue-router": "^5.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "prettier": "^3.9.6",
+    "typescript": "5.9",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0",
+    "vue-tsc": "^3.3.11"
+  }
+}

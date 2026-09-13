@@ -1,0 +1,29 @@
+{
+  "RV_PREV_01": {
+    "id": "RV_PREV_01",
+    "actor": "W06",
+    "origin": "护士保存的历史批次",
+    "events": [
+      {
+        "seq": 1,
+        "code": "SUBMIT_REVIEW",
+        "patientId": "R03",
+        "scope": "ENDING",
+        "storyTime": "2026-06-16 23:07:11"
+      },
+      {
+        "seq": 2,
+        "code": "INDEX_RECOUNT",
+        "countBefore": 6,
+        "countAfter": 5,
+        "storyTime": "2026-06-16 23:07:12"
+      }
+    ],
+    "authorizationVersion": "AUTH-0616-2",
+    "immutable": true
+  },
+  "activeCause": {
+    "SELF": "读取本局SUBMIT_REVIEW以及同事务INDEX_RECOUNT，显示玩家主体。",
+    "REPLAY": "读取RV_PREV_01；本局WATCH_REPLAY作为观察动作另列，不取代历史原因。"
+  }
+}

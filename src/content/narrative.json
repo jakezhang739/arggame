@@ -1,0 +1,128 @@
+[
+  {
+    "code": "DOWNLOAD_HANDOVER",
+    "original": "保存交接联 00",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "创建未授权的个人副本" }],
+    "fact": "玩家发起交接联文件下载；是否保存成功由后续确认或快照兜底。"
+  },
+  {
+    "code": "ACK_PAPER_NOTE",
+    "original": "完成纸质备份",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "纸质流程已废止，副本未回收" }],
+    "fact": "玩家确认抄写过三行并做了私人记号"
+  },
+  {
+    "code": "LOAD_SNAPSHOT",
+    "original": "载入迁移快照（在册 6 人）",
+    "rewrites": [{ "from": "R03_PREARCHIVED", "label": "发现重复记录 R03" }],
+    "fact": "COUNT=6"
+  },
+  {
+    "code": "SUBMIT_REVIEW",
+    "original": "完成 R03 复核",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "确认 R03 已有圆满结局" }],
+    "fact": "本局玩家签认R03，提交范围从开始就是ENDING；此条只在SELF路线存在。"
+  },
+  {
+    "code": "INDEX_RECOUNT",
+    "original": "在册人数更新为 5",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "修正历史计数错误" }],
+    "fact": "该批计数从6到5；原因引用见REVIEW_TRIGGER_OBSERVED，实时与历史来源分别标明。"
+  },
+  {
+    "code": "RECHECK_SUBMITTED",
+    "original": "提交异常复查",
+    "rewrites": [{ "from": "THEATER_DISCOVERED", "label": "驳回不实申诉" }],
+    "fact": "玩家提交了“身份索引异常”与两项证据"
+  },
+  {
+    "code": "LINK_IDENTITY",
+    "original": "恢复 R03 身份",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "清理重复身份" }],
+    "fact": "玩家建立 R03 → 许棠"
+  },
+  {
+    "code": "OPEN_DOC",
+    "target": "THEATER_MAP",
+    "original": "查阅地方史料",
+    "rewrites": [{ "from": "THEATER_DISCOVERED", "label": "W07 已入席" }],
+    "fact": "玩家打开过一份文献"
+  },
+  {
+    "code": "TAG_POSTS",
+    "original": "整理梦境记录",
+    "rewrites": [{ "from": "THEATER_DISCOVERED", "label": "回收已离院用户言论" }],
+    "fact": "玩家为三个帖子打了标签"
+  },
+  {
+    "code": "TIMELINE_SOLVED",
+    "original": "重建事件时间线",
+    "rewrites": [{ "from": "DUAL_SOURCE_EXPOSED", "label": "确认流程无异常" }],
+    "fact": "玩家按事件时间排序五份材料并标记不可靠证据"
+  },
+  {
+    "code": "INFER_MASQUE",
+    "original": "排除外部入侵解释",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "隔离结构安全声明已归档" }],
+    "fact": "玩家选择“内部结构预留的位置”"
+  },
+  {
+    "code": "PROVE_SHARED_SOURCE",
+    "original": "检查来源独立性",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "W07 在正负之间作出选择" }],
+    "fact": "两页具有同一个 SOURCE_ID"
+  },
+  {
+    "code": "EXPERIMENT_CONCLUDED",
+    "original": "确认触发变量",
+    "rewrites": [{ "from": "TRAIL_FORKED", "label": "实验数据已随批次封存" }],
+    "fact": "两组有效对照成立"
+  },
+  {
+    "code": "INSPECT_SLICE",
+    "original": "检查病理切片",
+    "rewrites": [{ "from": "TRAIL_FORKED", "label": "调阅涉密影像" }],
+    "fact": "玩家发现授权语句“已核对事实，因此接受终局”"
+  },
+  {
+    "code": "FORK_TRAIL",
+    "original": "创建本地异议分支",
+    "rewrites": [{ "from": "AUDIO_RECOVERED", "label": "提交未经审核的轨迹修改" }],
+    "fact": "玩家建立了带来源引用的解释异议；没有修改原始事件。"
+  },
+  {
+    "code": "AUDIO_ORDER_SOLVED",
+    "original": "重组通道 03 录音",
+    "rewrites": [{ "from": "SCOPE_LIMITED", "label": "播放已结案患者的历史遗言" }],
+    "fact": "六片段已按连续声响与边界重组。录音发生在“无后续事项”预填之后。"
+  },
+  {
+    "code": "WITNESS_SCOPE",
+    "original": "限定见证范围",
+    "rewrites": [{ "from": "SURGERY_READY", "label": "放弃见证权利" }],
+    "fact": "玩家确认固定FACT_ONLY范围；录音权限、时长和声音内容不作判定。"
+  },
+  {
+    "code": "SEVER_EDGE",
+    "original": "撤销一项授权联系",
+    "rewrites": [],
+    "fact": "正式撤销联系D或F；以本条edge字段为准。",
+    "endingLabels": {
+      "A": "破坏档案完整性",
+      "B": "破坏档案完整性",
+      "C": "撤销终局授权，照护联系保留"
+    }
+  },
+  {
+    "code": "WATCH_REPLAY",
+    "original": "观看W06历史复核回放",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "外部见证已接续" }],
+    "fact": "玩家只看了RV_PREV_01；没有提交终局签认。"
+  },
+  {
+    "code": "REVIEW_TRIGGER_OBSERVED",
+    "original": "核对本批预归档的触发来源",
+    "rewrites": [{ "from": "CLOSURE_PROVEN", "label": "外部结局依据已齐备" }],
+    "fact": "观察到一次ENDING签认；cause区分玩家提交和历史签认，观察不等于授权。"
+  }
+]

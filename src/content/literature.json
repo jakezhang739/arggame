@@ -1,0 +1,66 @@
+{
+  "M-7": {
+    "id": "M-7",
+    "work": "The Masque of the Red Death《红死病的假面》",
+    "sourceUrl": "https://www.eapoe.org/works/tales/masquec.htm",
+    "edition": "1850 reprint",
+    "checkedOn": "2026-09-12",
+    "excerpt": "They resolved to leave means neither of ingress or egress",
+    "excerptZh": "他们决定不留下任何进出的途径。",
+    "translationNote": "本项目自行转述/翻译；不复制现代中文译本。斜线仅表示原诗换行。",
+    "note": "亲王把门封死，在七间曲折相连的房间中举行舞会，仍无法避免死亡。故事没有给出可用于技术审计的入侵路径。研究组把它作为封闭系统的思考材料：边界上的安全记录，究竟覆盖哪些通道？院内平面图上有一个在迁移前就存在的外席。模型是否曾把自己的内部组成当成外部来客？请把这个问题交给建筑与审计材料验证。",
+    "unlockKey": "archiveAndTimeline",
+    "adaptationNote": "研究者的类比，不是“异常必由内部产生”的原作定论。",
+    "judgment": {
+      "id": "m7",
+      "question": "本批材料优先支持哪一种解释？",
+      "options": ["外部导入侵入", "内部结构中已有该位置", "无可比较的记录"],
+      "answerKey": "INSIDE_STRUCTURE"
+    }
+  },
+  "W-F": {
+    "id": "W-F",
+    "work": "The Conqueror Worm《征服者蠕虫》",
+    "sourceUrl": "https://www.eapoe.org/works/poems/cwormj.htm",
+    "edition": "Text-07a, 1845–1849",
+    "checkedOn": "2026-09-12",
+    "excerpt": "Uprising, unveiling, affirm / That the play is the tragedy, “Man,” / And its hero the Conqueror Worm.",
+    "excerptZh": "起身、揭下面纱、确认：这出戏是“人”的悲剧，它的主角是征服者蠕虫。",
+    "translationNote": "本项目自行转述/翻译；不复制现代中文译本。斜线仅表示原诗换行。",
+    "note": "诗中的演员受看不见的力量驱使，在循环中追逐幻影；蠕虫出现并吞食演员。灯熄灭、帷幕落下之后，天使起身，给这出戏及其主角作出最后的命名。研究组圈出了最后几个动词，却没有把观众写成使帷幕落下的原因。你的复核行为在这一结构中对应哪一部分？找出平面图上的位置，再核对本批的签认来源。",
+    "unlockKey": "masqueInferred",
+    "adaptationNote": "把终局命名变成异常的外部确认环节，是本项目的原创机制。"
+  },
+  "R-NM": {
+    "id": "R-NM",
+    "work": "The Raven《乌鸦》",
+    "sourceUrl": "https://www.eapoe.org/works/poems/ravens.htm",
+    "edition": "Text-10a",
+    "checkedOn": "2026-09-12",
+    "excerpt": "Though its answer little meaning — little relevancy bore; / Quoth the Raven “Nevermore.”",
+    "excerptZh": "尽管回答没多少含义，也不大相关；乌鸦说：“永不复还。”",
+    "translationNote": "本项目自行转述/翻译；不复制现代中文译本。斜线仅表示原诗换行。",
+    "note": "问题变得越来越私人，鸟却反复给出同一个词。叙述者逐渐把这个固定回答读成针对自身命运的判决。研究组留下两列空白：一列记录问题，一列记录原始回答。给回答添加解释的是谁？你已经查过正负页面的来源，现在可以检查它们各自怎样请求核心、又怎样把核心响应译给人看。",
+    "unlockKey": "dualSourceProven",
+    "adaptationNote": "固定响应的程序类比来自本项目，不把诗当成软件接口的直接证据。",
+    "judgment": {
+      "id": "rnm",
+      "question": "两种结论如何从核心响应产生？",
+      "options": ["核心分别诊断了两种病情", "界面把同一终止值译成相反结论", "不存在核心调用"],
+      "answerKey": "ONE_TERMINATION_INTERFACE"
+    }
+  },
+  "U-R": {
+    "id": "U-R",
+    "work": "The Fall of the House of Usher《厄舍府的倒塌》",
+    "sourceUrl": "https://www.eapoe.org/works/tales/usherd.htm",
+    "edition": "Tales 1845, Text-04c",
+    "checkedOn": "2026-09-12",
+    "excerpt": "the very cracking and ripping sound which Sir Launcelot had so particularly described",
+    "excerptZh": "恰是兰斯洛特爵士刚刚详细描写的那种碎裂、撕开的声音。",
+    "translationNote": "本项目自行转述/翻译；不复制现代中文译本。斜线仅表示原诗换行。",
+    "note": "朗读中的破门、尖叫、盾牌坠落，与宅邸里的声响接连呼应。故事让朗读者怀疑两者的联系，但这种吻合并不能单独证明文字造成了声音。研究组将原始录音、自动转写、情节说明分成三层。文字可以照抄声音，也可以替声音安排一个结局。你需要保留的，是不依赖这层安排仍然成立的接续关系。",
+    "unlockKey": "trailForkCreated",
+    "adaptationNote": "只借用文本与声响的对应结构；录音重排和提示污染为原创改造。"
+  }
+}

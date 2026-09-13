@@ -1,0 +1,38 @@
+{
+  "A": {
+    "edge": "A",
+    "label": "患者→本人陈述",
+    "preview": "陈述仍可读，姓名关联变为未归属。当前意愿栏无法核验。",
+    "formalOption": false
+  },
+  "B": {
+    "edge": "B",
+    "label": "护理记录→身份索引",
+    "preview": "护理项目还在，执行对象空白。下一班无法确认给谁。",
+    "formalOption": false
+  },
+  "C": {
+    "edge": "C",
+    "label": "外部见证→护理事实",
+    "preview": "独立核验断开，终局解释保留。",
+    "formalOption": false
+  },
+  "D": {
+    "edge": "D",
+    "label": "外部见证→终局声明",
+    "preview": "终局授权已撤销。身份、本人陈述与下一班护理联系均保留。",
+    "formalOption": true
+  },
+  "E": {
+    "edge": "E",
+    "label": "后续随访→护理记录",
+    "preview": "姓名仍显示，但下一班工作单失去护理依据。",
+    "formalOption": false
+  },
+  "F": {
+    "edge": "F",
+    "label": "终局声明→公示队列",
+    "preview": "外部传播停止。本批六人仍处封存，状态为仍待联系。",
+    "formalOption": true
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "ST_R01": {
+    "id": "ST_R01",
+    "patientId": "R01",
+    "text": "模型还差一个车轮，装好给外孙看。",
+    "sourceEvidence": "EV14",
+    "unlockKey": "postsLinked",
+    "page": "P06"
+  },
+  "ST_R02": {
+    "id": "ST_R02",
+    "patientId": "R02",
+    "text": "我的稿子还没排完，先别替我发出去。",
+    "sourceEvidence": "EV14",
+    "unlockKey": "postsLinked",
+    "page": "P06"
+  },
+  "ST_R03": {
+    "id": "ST_R03",
+    "patientId": "R03",
+    "text": "别扔。我记得怎么修。 明天要是还在，我自己看看。是十字螺丝，不是一字的。 先别替我记成已经修好。灯还在这里。",
+    "sourceEvidence": "EV25",
+    "unlockKey": "recoveredAudioRead",
+    "page": "P12"
+  },
+  "ST_R04": {
+    "id": "ST_R04",
+    "patientId": "R04",
+    "text": "阳台的薄荷托邻居照看了，我还得回个消息。",
+    "sourceEvidence": "PATIENT_R04",
+    "unlockKey": "theaterDiscovered",
+    "page": "P03"
+  },
+  "ST_R05": {
+    "id": "ST_R05",
+    "patientId": "R05",
+    "text": "周末家里人来，帮我留个靠窗的位置。",
+    "sourceEvidence": "PATIENT_R05",
+    "unlockKey": "dualSourceProven",
+    "page": "P03"
+  },
+  "ST_R06": {
+    "id": "ST_R06",
+    "patientId": "R06",
+    "text": "下次我想先和医生谈谈，能不能休息几天。",
+    "sourceEvidence": "PATIENT_R06",
+    "unlockKey": "closureProven",
+    "page": "P03"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "clock": {
+    "sessionStoryOrigin": "2026-06-16 23:10:00",
+    "note": "无时区的剧情时间，不以设备真实日期换算。SELF确认显示本局T+时刻；REPLAY显示历史绝对时刻；两者明确属于不同时间域。"
+  },
+  "correctOrder": ["TL_HANDOVER", "TL_OBSERVATION", "TL_PREFILL", "TL_REVIEW", "TL_RECOUNT"],
+  "cards": [
+    {
+      "id": "TL_HANDOVER",
+      "title": "护士交接",
+      "text": "林闻交接R03实物与待办，台灯仍待修。",
+      "evidenceId": "EV07",
+      "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:00:00" },
+      "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:02:00" }
+    },
+    {
+      "id": "TL_OBSERVATION",
+      "title": "临床观察",
+      "text": "观察单OBS-2208：本人能复述尚待处理的台灯事项。",
+      "evidenceId": "EV05",
+      "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:08:00" },
+      "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:10:00" }
+    },
+    {
+      "id": "TL_PREFILL",
+      "title": "结局预填",
+      "text": "归档模块先写入正向结案与无后续事项，外部确认栏此时为空。",
+      "evidenceId": "EV05",
+      "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:12:00" },
+      "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:12:00" }
+    },
+    {
+      "id": "TL_REVIEW",
+      "title": "外部确认",
+      "text": "展开显示真实签认主体与范围；SELF为本局玩家，REPLAY为RV_PREV_01中的W06。",
+      "evidenceId": "EV10",
+      "eventTime": { "kind": "REVIEW_CAUSE", "value": "confirm" },
+      "uploadTime": { "kind": "REVIEW_CAUSE", "value": "confirm" }
+    },
+    {
+      "id": "TL_RECOUNT",
+      "title": "身份索引重算",
+      "text": "该签认之后，COUNT从6变为5。",
+      "evidenceId": "EV10",
+      "eventTime": { "kind": "REVIEW_CAUSE", "value": "recount" },
+      "uploadTime": { "kind": "REVIEW_CAUSE", "value": "recount" }
+    }
+  ],
+  "suspectEvidence": "EV11",
+  "reviewOrderRule": "SELF后两卡按原始seq；REPLAY后两卡按历史seq。界面辅助显示所有确认均晚于06-16 22:12的预填，禁止直接拿T+数字与日历时间作字典序比较。"
+}
