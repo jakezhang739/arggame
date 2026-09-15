@@ -133,6 +133,7 @@ function play(): void {
   padding: var(--space-4);
   background: #f4f7f5;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+  min-width: 0;
 }
 .row {
   display: flex;
@@ -148,6 +149,8 @@ function play(): void {
   margin: var(--space-3) 0;
   border-block: 1px solid rgba(196, 206, 200, 0.75);
   padding: var(--space-2) 0;
+  min-width: 0; /* grid/flex 子项默认 min-width:auto 会让 80 根波形条（≈330px 固有宽）撑爆窄列 */
+  overflow: hidden;
 }
 .bar {
   flex: 1;

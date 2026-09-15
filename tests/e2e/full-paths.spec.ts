@@ -44,7 +44,7 @@ for (const [cause, ending] of COMBOS) {
     await page.getByTestId('p05:ev11-unreliable').check();
     await app.reorderTimeline(page, ['TL_HANDOVER', 'TL_OBSERVATION', 'TL_PREFILL', 'TL_REVIEW', 'TL_RECOUNT']);
     await page.getByTestId('p05:submit-p2').click();
-    await expect(page.getByText('时间线已重建')).toBeVisible();
+    await expect(page.getByTestId('p05:p2-done')).toBeVisible();
 
     // —— EV05（p6 证据）——
     await app.openEv05(page);

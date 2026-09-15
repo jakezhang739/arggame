@@ -1,0 +1,18 @@
+{
+  "issues": [],
+  "shots": [
+    "gui-test-screenshots/live-01-首页.png",
+    "gui-test-screenshots/live-02-交接-进入.png",
+    "gui-test-screenshots/live-03-交接-保存后.png",
+    "gui-test-screenshots/live-04-交接-确认文件.png",
+    "gui-test-screenshots/live-05-交接-规则完成.png",
+    "gui-test-screenshots/live-06-病历首页.png",
+    "gui-test-screenshots/live-07-复核R03.png",
+    "gui-test-screenshots/live-08-提交后-异常场景.png",
+    "gui-test-screenshots/live-09-P05-调查台.png",
+    "gui-test-screenshots/live-10-P05-结论列-用户状态.png",
+    "gui-test-screenshots/live-11-P05-滚动中部.png",
+    "gui-test-screenshots/live-12-P05-页底.png",
+    "gui-test-screenshots/live-13-交接-页底.png"
+  ]
+}

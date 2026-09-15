@@ -42,7 +42,8 @@ export function eligibilityHolds(state: GameState, key: EligibilityKey): boolean
     case 'dualSourceProven':
       return f.dualSourceProven;
     case 'experimentAvailable':
-      return f.dualSourceProven && f.refrainInferred;
+      // R-NM 已降为可选解释卡（07册 §4.1）：实验只需同源成立。
+      return f.dualSourceProven;
     case 'closureProven':
       return f.experimentConcluded;
     case 'trailForkCreated':
@@ -82,6 +83,85 @@ export function isAcquired(state: GameState, id: EvidenceId): boolean {
 
 export function selectEvidence(state: GameState): EvidenceItem[] {
   return content.evidenceRegistry.filter((e) => isAcquired(state, e.id));
+}
+
+// —— 证据玩家语言（07册 §8.2 / 08册 §4.2）——
+
+export type EvidenceSourceLabel = '归档链内' | '独立来源' | '本机证据' | '派生结论';
+
+/** 独立来源 = 院内归档链之外的材料（论坛、地方档案、剧场研究）。 */
+const INDEPENDENT_ORIGIN_GROUPS: ReadonlySet<string> = new Set(['BBS_RAW', 'LOCAL_ARCHIVE', 'NAR_0042']);
+
+export function evidenceSourceLabel(item: EvidenceItem): EvidenceSourceLabel {
+  if (item.sourceType === 'PLAYER_LOCAL') return '本机证据';
+  if (item.sourceType === 'DERIVED') return '派生结论';
+  return INDEPENDENT_ORIGIN_GROUPS.has(item.originGroup) ? '独立来源' : '归档链内';
+}
+
+export type EvidenceStatus = 'unseen' | 'acquired' | 'pinned' | 'conflict' | 'used';
+
+export const EVIDENCE_STATUS_LABEL: Record<EvidenceStatus, string> = {
+  unseen: '未查看',
+  acquired: '已取得',
+  pinned: '已固定',
+  conflict: '存在冲突',
+  used: '已用于结论',
+};
+
+/** 与其他记录存在已知矛盾的 EvidenceId（上传时间早于其引用事件）。 */
+export const CONFLICTING_EVIDENCE: ReadonlySet<EvidenceId> = new Set<EvidenceId>(['EV11']);
+
+/** 已被通过的结论采纳的证据（复查提交、身份恢复、时间线判定）。 */
+export function evidenceUsedInConclusions(state: GameState): Set<EvidenceId> {
+  const used = new Set<EvidenceId>();
+  for (const e of state.events) {
+    const p = e.payload as Record<string, unknown>;
+    if (e.code === 'RECHECK_SUBMITTED' && Array.isArray(p?.evidenceIds)) {
+      for (const id of p.evidenceIds as string[]) used.add(id as EvidenceId);
+    }
+    if (e.code === 'LINK_IDENTITY' && typeof p?.source === 'string') used.add(p.source as EvidenceId);
+    if (e.code === 'TIMELINE_SOLVED' && Array.isArray(p?.unreliable)) {
+      for (const id of p.unreliable as string[]) used.add(id as EvidenceId);
+    }
+  }
+  return used;
+}
+
+export function evidenceStatusFor(
+  state: GameState,
+  id: EvidenceId,
+  pinned: readonly EvidenceId[],
+): EvidenceStatus {
+  if (!isAcquired(state, id)) return 'unseen';
+  if (CONFLICTING_EVIDENCE.has(id)) return 'conflict';
+  if (pinned.includes(id)) return 'pinned';
+  if (evidenceUsedInConclusions(state).has(id)) return 'used';
+  return 'acquired';
+}
+
+/** 未取得材料的取得位置提示（按资格键映射到玩家可理解的站点）。 */
+const ELIGIBILITY_LOCATION: Record<EligibilityKey, string> = {
+  session: '夜班交接',
+  handoverReady: '病例与复核',
+  prearchived: '发药对照 · 材料箱',
+  reviewObserved: '发药对照 · 材料箱',
+  recheckAccepted: '发药对照 · 结论区',
+  identityRestored: '发药对照 · 时间线',
+  postsLinked: '病友留言板',
+  archiveAndTimeline: '地方档案',
+  masqueInferred: '地方档案 · 研究卡',
+  theaterDiscovered: '正负文档比较',
+  dualSourceProven: '审校实验室',
+  experimentAvailable: '单变量实验',
+  closureProven: '授权切片',
+  trailForkCreated: '叙事轨迹',
+  audioRecovered: '录音台',
+  recoveredAudioRead: '录音台 · 结论',
+  scopeLimited: '切除模拟',
+};
+
+export function evidenceLocationHint(item: EvidenceItem): string {
+  return ELIGIBILITY_LOCATION[item.eligibilityKey] ?? '继续调查';
 }
 
 export function evidenceView(
@@ -166,7 +246,7 @@ export function pageAvailable(state: GameState, page: string): boolean {
     case 'compare':
       return phaseAtLeast(p, 'THEATER_DISCOVERED');
     case 'experiment':
-      return f.dualSourceProven && f.refrainInferred;
+      return f.dualSourceProven;
     case 'slices':
       return f.experimentConcluded;
     case 'trail':

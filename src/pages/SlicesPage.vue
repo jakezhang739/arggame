@@ -1,8 +1,10 @@
 <script setup lang="ts">
-/** P10 处理切片（docs/03册 v1.1 §3）：六层可开关的病例处理图 + 明确检查点（不找像素）。 */
+/** P10 处理切片（docs/11 Batch 4 §5）：六层可开关的处理图 + 明确检查点 + 四段式完成反馈。 */
 import { computed, reactive, ref } from 'vue';
 import { useGameStore } from '../stores/game';
 import { isAcquired } from '../game/selectors';
+import CompletionPanel from '../components/CompletionPanel.vue';
+import WalkthroughHint from '../components/WalkthroughHint.vue';
 
 const game = useGameStore();
 const ev24 = computed(() => isAcquired(game.state, 'EV24'));
@@ -34,6 +36,7 @@ async function inspect(): Promise<void> {
     <div class="split">
       <section class="panel">
         <h2>六层切片</h2>
+        <WalkthroughHint>点「放大检查授权句」，展开后点「已核对事实，确认发现」即可。</WalkthroughHint>
         <fieldset class="layer-toggles">
           <legend>开关各层</legend>
           <label v-for="l in LAYERS" :key="l.id" class="marker small">
@@ -78,7 +81,17 @@ async function inspect(): Promise<void> {
           <button v-if="!ev24" class="primary" data-testid="p10:inspect" @click="inspect">
             已核对事实，确认发现
           </button>
-          <p v-else class="ok">✓ EV24 已取得（授权句已核对）。</p>
+          <template v-else>
+            <p class="ok">✓ EV24 已取得（授权句已核对）。</p>
+            <CompletionPanel
+              testid="p10:inspected"
+              proved="这句「已核对事实，因此接受终局」就写在签名位旁边。它核对着护理事实，接受的却是人生终局。"
+              excluded="不是抄错的一句话。它的落点太准了——恰好在能让终局生效的那一层。"
+              opened="叙事轨迹：把今晚的里程碑按真实顺序重排，指出这条等式不该成立。"
+              action-label="去轨迹异议工作台"
+              action-to="/trail"
+            />
+          </template>
         </div>
       </section>
 
@@ -93,9 +106,6 @@ async function inspect(): Promise<void> {
           <li :class="{ dim: !active.L6 }">归档投影：对外显示的名单与状态。</li>
         </ol>
         <p class="muted small">不需要找像素：列表与放大按钮给出相同结论。</p>
-        <p v-if="ev24">
-          <RouterLink to="/trail" data-testid="p10:goto-trail">去轨迹异议工作台 →</RouterLink>
-        </p>
       </aside>
     </div>
   </div>

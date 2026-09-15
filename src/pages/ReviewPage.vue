@@ -37,7 +37,7 @@ async function openDoc(id: string): Promise<void> {
   <div class="review">
     <nav class="back"><RouterLink to="/followup">← 返回六人病历</RouterLink></nav>
     <header class="page-intro">
-      <p class="eyebrow mono">EXTERNAL REVIEW / SINGLE RECORD</p>
+      <p class="eyebrow mono">外部复核 · 单份记录</p>
       <h1>核对 {{ patient.id }} 的护理事实</h1>
       <p>先区分“记录已经看过”和“这个人已经有了结局”。前者不会改变案件，后者会进入二次确认。</p>
     </header>

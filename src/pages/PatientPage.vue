@@ -27,6 +27,13 @@ const statement = computed(() => {
   return patient.value.selfStatement;
 });
 
+/** 当前医疗选择（10册 §4，已批）：六人各自不同的立场，"继续随访"≠"强迫继续一切治疗"。 */
+const currentChoice = computed(() => {
+  if (!patient.value) return '';
+  const st = content.statements[`ST_${patient.value.id}`];
+  return st?.currentChoice ?? '';
+});
+
 const showSource = ref(false);
 const ev05Acquired = computed(() => isAcquired(game.state, 'EV05'));
 
@@ -98,6 +105,10 @@ if (!patient.value) {
           </button>
           <p v-else class="muted small">{{ STATEMENT_PAGE_HINT[patient.id] ?? '待补交班事项：稍后出现。' }}</p>
         </template>
+        <div v-if="currentChoice" class="current-choice" data-testid="p03:current-choice">
+          <strong>当前选择</strong>
+          <p>{{ currentChoice }}</p>
+        </div>
       </section>
 
       <section class="panel">
@@ -141,6 +152,9 @@ if (!patient.value) {
 .kv { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-3); margin: 0; }
 .kv dt { color: var(--muted); }
 .statement { margin: 0 0 var(--space-2); border-left: 4px solid var(--line); padding-left: var(--space-3); white-space: pre-wrap; }
+.current-choice { margin-top: var(--space-3); border: 1px dashed #ad8a42; border-radius: var(--radius); padding: var(--space-2) var(--space-3); background: rgba(213, 170, 83, 0.08); }
+.current-choice strong { display: block; color: #8a6a2c; font-size: 0.78rem; letter-spacing: 0.06em; margin-bottom: var(--space-1); }
+.current-choice p { margin: 0; font-size: 0.9em; line-height: 1.65; }
 .blankname { opacity: 0.3; }
 .small { font-size: 0.85em; }
 .source-detail { background: #eef1ef; padding: var(--space-2) var(--space-3); border-radius: var(--radius); margin-top: var(--space-2); }

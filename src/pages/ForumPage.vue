@@ -5,6 +5,8 @@ import { useGameStore } from '../stores/game';
 import { content, resolveContent, dialogue } from '../game/content';
 import { isAcquired, phaseAtLeast, statementUnlocked } from '../game/selectors';
 import SourceInspector from '../components/SourceInspector.vue';
+import CompletionPanel from '../components/CompletionPanel.vue';
+import WalkthroughHint from '../components/WalkthroughHint.vue';
 
 const game = useGameStore();
 const phase = computed(() => game.state.lastMainPhase);
@@ -12,6 +14,7 @@ const ending = computed(() => game.state.ending);
 const facts = computed(() => game.state.facts);
 
 const ev14Acquired = computed(() => isAcquired(game.state, 'EV14'));
+const ev29Acquired = computed(() => isAcquired(game.state, 'EV29'));
 const theaterReached = computed(() => phaseAtLeast(phase.value, 'THEATER_DISCOVERED'));
 
 interface Post {
@@ -107,17 +110,34 @@ async function capture(pid: string): Promise<void> {
 
     <section v-if="!ev14Acquired" class="panel">
       <h2>站务</h2>
-      <p class="muted">本板原始数据（BBS_RAW）可整体打开核对。</p>
+      <p class="muted">本板的原始数据可以整体打开核对，用于和院内记录对照。</p>
       <button class="primary" data-testid="p06:open-ev14" @click="game.execute({ kind: 'openDoc', documentId: 'EV14' })">
-        打开留言板原始数据（EV14）
+        打开留言板原始数据 <small class="mono">EV14</small>
       </button>
     </section>
     <section v-else class="panel">
-      <h2>已取得：梦境帖原始数据（EV14）</h2>
+      <h2>已取得：《梦境帖》原始数据</h2>
       <SourceInspector id="EV14" />
     </section>
 
-    <article v-for="post in posts" :key="post.id" class="post" :data-testid="`p06:post--${post.id}`">
+    <!-- 周砚版本签名站务帖（docs/10 §1.2 ①）：给“迁移故障”一个有署名的官方口径。 -->
+    <article class="post station" data-testid="p06:post--station">
+      <header>
+        <span class="avatar staff" aria-hidden="true"></span>
+        <strong>迁移项目组 · 周砚</strong>
+        <span class="mono muted small">v0.9.3-rc2</span>
+      </header>
+      <p class="post-body prewrap">{{ dialogue.zhouyan.notice }}</p>
+    </article>
+
+    <div class="timeline">
+      <article
+        v-for="post in posts"
+        :key="post.id"
+        class="post"
+        :class="{ 'dream-post': post.dream }"
+        :data-testid="`p06:post--${post.id}`"
+      >
       <header>
         <span class="avatar" aria-hidden="true"></span>
         <strong>{{ authorLabel(post) }}</strong>
@@ -143,10 +163,12 @@ async function capture(pid: string): Promise<void> {
         选入关联
       </label>
     </article>
+    </div>
 
     <section v-if="!facts.postsLinked" class="panel">
       <h2>关联梦境帖</h2>
       <p class="muted small">三个帖子如果在讲同一件事，可以用标签把关系固定下来。</p>
+      <WalkthroughHint>勾选陈桥、宋渺、许棠三人的梦境帖（不要选报修、闲聊那些）；「地点、结构、角色」三个标签全部勾上，然后提交关联。</WalkthroughHint>
       <fieldset class="tags">
         <legend>使用标签</legend>
         <label v-for="t in TAGS" :key="t" class="marker">
@@ -166,25 +188,83 @@ async function capture(pid: string): Promise<void> {
     </section>
 
     <section v-else class="panel okbox">
-      <h2>已关联</h2>
-      <p class="ok">✓ 三段梦境帖已用「地点 / 结构 / 角色」关联（陈桥、宋渺、许棠）。</p>
+      <CompletionPanel
+        testid="p06:linked-done"
+        proved="三个梦说的是同一个地方。「地点、结构、角色」三张标签，把话钉死了。"
+        excluded="「三个互不相干的怪梦」——不，它们共用同一副骨架。"
+        opened="接下来可以留下陈桥、宋渺的原话；地方档案也对你打开了。"
+        action-label="去地方档案"
+        action-to="/archive"
+      />
       <template v-for="pid in ['R01', 'R02']" :key="pid">
-        <p v-if="stCaptured(pid)" class="ok small">✓ {{ pid }} 的本人陈述已保留（{{ stId(pid) }}）。</p>
+        <p v-if="stCaptured(pid)" class="ok small">✓ {{ content.patients[pid].name }}的本人陈述已保留。</p>
         <button v-else-if="stUnlocked(pid)" class="ghost" :data-testid="`p06:capture--${pid}`" @click="capture(pid)">
-          保留 {{ pid }} {{ content.patients[pid].name }} 的本人陈述
+          保留 {{ content.patients[pid].name }} 的本人陈述
         </button>
       </template>
-      <p>
-        <RouterLink to="/archive" data-testid="p06:goto-archive">去地方档案与研究卡 →</RouterLink>
-      </p>
+    </section>
+
+    <!-- 林闻旧签认（10册 §2，已批）：关联完成后揭示，制造可疑窗口。 -->
+    <section v-if="facts.postsLinked" class="panel linwen-panel" aria-labelledby="linwen-h">
+      <h2 id="linwen-h">林闻的私信</h2>
+      <article class="message-card" data-testid="p06:linwen-note">
+        <header>林闻 · 只发给你</header>
+        <p class="prewrap">{{ dialogue.linwen.prevSignNote }}</p>
+      </article>
+      <button v-if="!ev29Acquired" data-testid="p06:open-ev29" @click="game.execute({ kind: 'openDoc', documentId: 'EV29' })">
+        查看她保留的本机备份《上一批次签认记录》 <small class="mono">EV29</small>
+      </button>
+      <article v-else class="message-card confession" data-testid="p06:linwen-confession">
+        <header>林闻 · 承认</header>
+        <p class="prewrap">{{ dialogue.linwen.prevSignConfession }}</p>
+        <p class="muted small">
+          她签过一次「护理事实已核对」，第二天 R00 就没了。这一批的事故，真是迁移闹的？
+          还是跟她没说出口的那件事有关？
+        </p>
+      </article>
     </section>
   </div>
 </template>
 
 <style scoped>
 .post { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-3) var(--space-4); margin: var(--space-3) 0; }
+.post.station { background: #f7f5ef; border-color: #d8d2c0; }
 .post header { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .avatar { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #8aa39a, #5d7a70); }
+.avatar.staff { background: linear-gradient(135deg, #b7a77e, #8a7a4e); }
+.prewrap { white-space: pre-wrap; }
+
+/* 时间流：左轨＋发帖圆点，帖子按发布先后排列 */
+.timeline { position: relative; padding-left: var(--space-4); }
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 5px;
+  width: 2px;
+  background: linear-gradient(180deg, #cfc9b8, #e2ddd0);
+}
+.timeline .post { position: relative; }
+.timeline .post::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-4) - 7px);
+  top: 24px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #65725b;
+  box-shadow: 0 0 0 3px var(--surface);
+}
+.timeline .post.dream-post::before { border-color: #795d3d; }
+
+.linwen-panel { border-left: 3px solid #65725b; }
+.message-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fbfaf6; padding: var(--space-2) var(--space-3); }
+.message-card header { color: var(--muted); font-size: 0.78rem; font-weight: 700; margin-bottom: var(--space-1); }
+.message-card p { margin: 0; font-size: 0.86em; line-height: 1.7; }
+.message-card.confession { border-color: #b98a4f; background: #faf5ea; }
 .post-body { margin: var(--space-2) 0 var(--space-1); }
 .reply { border-left: 3px solid var(--line); padding-left: var(--space-2); font-size: 0.9em; }
 .tags { display: flex; gap: var(--space-4); flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--radius); }

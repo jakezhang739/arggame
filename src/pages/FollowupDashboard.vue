@@ -94,7 +94,7 @@ function goPatient(id: string): void {
 <template>
   <div class="dashboard">
     <header class="page-intro">
-      <p class="eyebrow mono">PATIENT INDEX / BATCH 0617</p>
+      <p class="eyebrow mono">病历索引 · 0617 批次</p>
       <h1 data-testid="p02:list-title">{{ title }}</h1>
       <p>这是今晚交给 W07 的六人名单。先处理唯一一份待外部复核记录。</p>
     </header>

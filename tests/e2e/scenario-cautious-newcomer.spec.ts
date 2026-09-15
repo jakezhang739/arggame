@@ -53,7 +53,7 @@ test('谨慎新手：REPLAY → 错误提交×2 → 修正 → 恢复许棠 → 
   await page.getByTestId('p05:ev--EV07').uncheck();
   await page.getByTestId('p05:ev--EV02').check();
   await page.getByTestId('p05:submit-p1').click();
-  await expect(page.getByText('复查已受理')).toBeVisible();
+  await expect(page.getByTestId('p05:p1-done')).toBeVisible();
 
   // 暂停：关掉标签页（关闭上下文近似），第二天从 P00 继续进入
   const savedState = await page.evaluate(() => localStorage.getItem('cw-save-v2'));

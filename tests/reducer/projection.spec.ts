@@ -1,7 +1,7 @@
 /** 内容投影、证据注册与叙事（docs/01_核心契约.md v1.1 §4、02册 v1.1）。 */
 import { describe, expect, it } from 'vitest';
 import { content, resolveContent } from '../../src/game/content';
-import { isAcquired, narrativeLabelFor, selectEvidence, statementUnlocked } from '../../src/game/selectors';
+import { isAcquired, narrativeLabelFor, selectEvidence, statementUnlocked, evidenceSourceLabel, evidenceStatusFor, evidenceUsedInConclusions } from '../../src/game/selectors';
 import { A1_CORRECT_ORDER, TIMELINE_CORRECT_ORDER } from '../../src/game/gates';
 import { fullRun } from '../helpers';
 
@@ -59,9 +59,9 @@ describe('叙事投影（20 条）', () => {
   });
 });
 
-describe('证据注册表（27 条）', () => {
+describe('证据注册表（29 条）', () => {
   it('元数据齐备；PLAYER_LOCAL 与快照无变体（projectionKey 为空）', () => {
-    expect(content.evidenceRegistry).toHaveLength(27);
+    expect(content.evidenceRegistry).toHaveLength(29);
     for (const item of content.evidenceRegistry) {
       expect(item.acquisitionKey).toMatch(/^[A-Z_]+(:[A-Za-z0-9_]+)?$/);
       expect(item.display.length).toBeGreaterThan(0);
@@ -69,6 +69,16 @@ describe('证据注册表（27 条）', () => {
     }
     expect(content.evidenceRegistry.find((e) => e.id === 'EV02')!.projectionKey).toBeUndefined();
     expect(content.evidenceRegistry.find((e) => e.id === 'EV04')!.projectionKey).toBe('evidence.EV04');
+  });
+  it('核心/可选分层：恰 18 份核心（10册 §6 已批清单）', () => {
+    const core = content.evidenceRegistry.filter((e) => (e.tier ?? 'core') === 'core');
+    expect(core).toHaveLength(18);
+    for (const id of ['EV01', 'EV02', 'EV14', 'EV06', 'EV10', 'EV11', 'EV25', 'EV19', 'EV20', 'EV21', 'EV28', 'EV05', 'EV12', 'EV17', 'EV22', 'EV26', 'EV27', 'EV16'] as const) {
+      expect(core.some((e) => e.id === id), id).toBe(true);
+    }
+    for (const id of ['EV03', 'EV09', 'EV13', 'EV18', 'EV23', 'EV29'] as const) {
+      expect(content.evidenceRegistry.find((e) => e.id === id)!.tier).toBe('optional');
+    }
   });
   it('J06：EV01/EV02/EV03 同一 originGroup（不判三个独立目击）', () => {
     const g = new Set(['EV01', 'EV02', 'EV03'].map((id) => content.evidenceRegistry.find((e) => e.id === id)!.originGroup));
@@ -81,6 +91,67 @@ describe('证据注册表（27 条）', () => {
     }
     expect(selectEvidence(e.state).length).toBeGreaterThanOrEqual(20);
   });
+  it('来源四档与状态五档（07册 §8.2 / 08册 §4.2）', async () => {
+    const e = await fullRun('SELF', 'C');
+    const byId = (id: string) => content.evidenceRegistry.find((x) => x.id === id)!;
+    expect(evidenceSourceLabel(byId('EV05'))).toBe('归档链内');
+    expect(evidenceSourceLabel(byId('EV14'))).toBe('独立来源');
+    expect(evidenceSourceLabel(byId('EV01'))).toBe('本机证据');
+    expect(evidenceSourceLabel(byId('EV21'))).toBe('派生结论');
+    expect(evidenceStatusFor(e.state, 'EV11', [])).toBe('conflict');
+    expect(evidenceStatusFor(e.state, 'EV06', ['EV06'])).toBe('pinned');
+    expect(evidenceStatusFor(e.state, 'EV05', [])).toBe('acquired');
+    expect(evidenceStatusFor(e.state, 'EV01', [])).toBe('used');
+    expect(evidenceUsedInConclusions(e.state).has('EV01')).toBe(true);
+  });
+  it('EV28 迁移值班说明：归档链内、不参与任何谜题必需集', () => {
+    const item = content.evidenceRegistry.find((e) => e.id === 'EV28')!;
+    expect(item.originGroup).toBe('PROJECT_MIGRATION');
+    expect(item.supports).toEqual([]);
+    expect(evidenceSourceLabel(item)).toBe('归档链内');
+  });
+  it('EV29 林闻旧签认：本机证据、可选层、postsLinked 后可开（10册 §2 已批）', () => {
+    const item = content.evidenceRegistry.find((e) => e.id === 'EV29')!;
+    expect(item.sourceType).toBe('PLAYER_LOCAL');
+    expect(item.originGroup).toBe('PREV_BATCH_SIGN');
+    expect(item.eligibilityKey).toBe('postsLinked');
+    expect(item.tier).toBe('optional');
+    expect(evidenceSourceLabel(item)).toBe('本机证据');
+  });
+});
+
+describe('三结局与切除后果（Batch 5，10册 §5 已批）', () => {
+  it('A/B/C 各有真实收益与代价；C 含林闻与周砚的后果', () => {
+    for (const id of ['A', 'B', 'C'] as const) {
+      const e = content.endings[id] as unknown as { gains?: string[]; costs?: string[] };
+      expect(e.gains?.length, id).toBeGreaterThanOrEqual(3);
+      expect(e.costs?.length, id).toBeGreaterThanOrEqual(3);
+    }
+    const c = content.endings.C as unknown as { costs?: string[] };
+    expect(c.costs!.some((x) => x.includes('林闻'))).toBe(true);
+    expect(c.costs!.some((x) => x.includes('周砚'))).toBe(true);
+    const a = content.endings.A as unknown as { costs?: string[] };
+    expect(a.costs!.some((x) => x.includes('台灯'))).toBe(true);
+    expect((content.endings.C as unknown as { finalSoundNote?: string }).finalSoundNote).toContain('先别关');
+  });
+  it('六条边各带六人人物后果（07册 §7.6）', () => {
+    const surgery = content.surgery as Record<string, { humanCost?: string[] }>;
+    for (const id of ['A', 'B', 'C', 'D', 'E', 'F']) {
+      expect(surgery[id]?.humanCost, id).toHaveLength(6);
+    }
+  });
+  it('AUD11 结尾包含许棠的下一句', () => {
+    const clips = (content.audioManifest as { clips: Record<string, { speech: string }> }).clips;
+    expect(clips.AUD11.speech).toContain('先别关');
+  });
+  it('四部文学卡均带中文译文与翻译说明（用户反馈：原文必须附中文）', () => {
+    for (const id of ['M-7', 'W-F', 'R-NM', 'U-R'] as const) {
+      const card = content.literature[id] as { excerpt: string; excerptZh: string; translationNote: string };
+      expect(card.excerpt.length, id).toBeGreaterThan(10);
+      expect(card.excerptZh.length, id).toBeGreaterThan(6);
+      expect(card.translationNote, id).toContain('翻译');
+    }
+  });
 });
 
 describe('陈述与时间线内容', () => {
@@ -92,6 +163,16 @@ describe('陈述与时间线内容', () => {
       expect(st.text.length).toBeGreaterThan(0);
     }
     expect(content.statements.ST_R03.sourceEvidence).toBe('EV25');
+  });
+  it('六人各有不同的当前选择（10册 §4 已批）', () => {
+    const choices = new Set<string>();
+    for (const pid of ['R01', 'R02', 'R03', 'R04', 'R05', 'R06']) {
+      const st = content.statements[`ST_${pid}`];
+      expect(st.currentChoice, pid).toBeTruthy();
+      expect(st.currentChoice!.length).toBeGreaterThan(6);
+      choices.add(st.currentChoice!);
+    }
+    expect(choices.size).toBe(6);
   });
   it('陈述解锁映射正确（R06 需 closureProven）', async () => {
     const e = await fullRun('SELF', 'C');

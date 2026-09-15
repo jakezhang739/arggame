@@ -8,7 +8,7 @@ defineProps<{ mode: 'drawer' | 'full' }>();
 const game = useGameStore();
 const open = ref(false);
 const expandedSeq = ref<number | null>(null);
-const title = computed(() => game.state.facts.trailForkCreated ? '叙事轨迹' : '调查记录');
+const title = computed(() => game.state.facts.sliceInspected ? '叙事轨迹' : '调查记录');
 
 function toggle(): void {
   open.value = !open.value;

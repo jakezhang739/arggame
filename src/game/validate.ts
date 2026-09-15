@@ -47,8 +47,8 @@ export async function validateEvents(
 export function validateSave(save: SaveData): ValidationReport {
   const problems: string[] = [];
   if (save.kind !== 'CW_SAVE') problems.push('存档 kind 不正确。');
-  if (save.schemaVersion !== 2) problems.push('存档 schemaVersion 不正确。');
-  if (save.contentVersion !== '1.1') problems.push('存档 contentVersion 不匹配。');
+  if (save.schemaVersion !== 3) problems.push('存档 schemaVersion 不正确。');
+  if (save.contentVersion !== '1.2') problems.push('存档 contentVersion 不匹配。');
   if (save.hashAlgorithm !== 'sha-256') problems.push('存档哈希算法不正确。');
   problems.push(...validateEventStructure(save.events, save.sessionId));
   return { ok: problems.length === 0, problems };

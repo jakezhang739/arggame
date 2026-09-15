@@ -122,6 +122,13 @@ export const router = createRouter({
     },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
+  // 跳转重置滚动（实机排查 2026-09-15）：不重置时上一页的 scrollY 会带到新页，
+  // 把首屏标题滚进 sticky 顶栏后面，造成用户截图中的叠压；后退仍恢复原位。
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    if (to.hash) return { el: to.hash, top: 96, behavior: 'smooth' };
+    return { top: 0 };
+  },
 });
 
 router.beforeEach((to) => {

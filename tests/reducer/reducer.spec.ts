@@ -119,21 +119,27 @@ describe('六条完整路线（SELF/REPLAY × A/B/C）', () => {
 });
 
 describe('阶段推导细节', () => {
-  it('T3 五件事缺一不可', () => {
+  it('T3 四件必做缺一不可；假说位可选（M-7 已降为短材料）', () => {
     const base = [
       ev('REVIEW_TRIGGER_OBSERVED', { cause: { kind: 'SELF', eventId: 'x' }, observedScope: 'ENDING' }),
       ev('INDEX_RECOUNT', { count: 5, causeObservationId: 'x' }),
       ev('LINK_IDENTITY', { patientId: 'R03', name: '许棠', source: 'EV01' }),
     ];
-    const marks: GameEvent[] = [
+    const required: GameEvent[] = [
       ev('TIMELINE_SOLVED'),
       ev('TAG_POSTS'),
       ev('MATCH_FLOORPLAN'),
-      ev('INFER_MASQUE', { choice: 'INSIDE_STRUCTURE' }),
       ev('LINK_AUDIENCE'),
     ];
-    expect(derivePhase([...base, ...marks]).phase).toBe('THEATER_DISCOVERED');
-    expect(derivePhase([...base, ...marks.slice(1)]).phase).toBe('IDENTITY_RESTORED');
+    expect(derivePhase([...base, ...required]).phase).toBe('THEATER_DISCOVERED');
+    expect(derivePhase([...base, ...required.slice(1)]).phase).toBe('IDENTITY_RESTORED');
+    expect(
+      derivePhase([...base, ev('TAG_POSTS'), ev('MATCH_FLOORPLAN'), ev('LINK_AUDIENCE')]).phase,
+    ).toBe('IDENTITY_RESTORED');
+    // 假说位（INFER_MASQUE）不再必需，也不阻断推进
+    expect(
+      derivePhase([...base, ...required, ev('INFER_MASQUE', { choice: 'INSIDE_STRUCTURE' })]).phase,
+    ).toBe('THEATER_DISCOVERED');
   });
 
   it('T8 需先确认完整录音再见证', () => {

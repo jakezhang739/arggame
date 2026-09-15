@@ -1,4 +1,4 @@
-/** 证据 id 字面量（与 content/evidence.json 的 27 条一一对应）。 */
+/** 证据 id 字面量（与 content/evidence.json 的 29 条一一对应）。 */
 export type EvidenceId =
   | 'EV01'
   | 'EV02'
@@ -26,4 +26,6 @@ export type EvidenceId =
   | 'EV24'
   | 'EV25'
   | 'EV26'
-  | 'EV27';
+  | 'EV27'
+  | 'EV28'
+  | 'EV29';

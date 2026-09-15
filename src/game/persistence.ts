@@ -4,7 +4,8 @@ import { ONCE_EVENT_CODES, EVENT_CODES } from './types';
 
 export const SAVE_KEY = 'cw-save-v2';
 export const SETTINGS_KEY = 'cw-settings-v1';
-export const CONTENT_VERSION = '1.1';
+export const CONTENT_VERSION = '1.2';
+export const SAVE_SCHEMA_VERSION = 3;
 
 export type LoadResult = { ok: true; save: SaveData } | { ok: false; error: string };
 
@@ -47,7 +48,7 @@ export function freshSave(sessionId: string = newSessionId()): SaveData {
   const now = Date.now();
   return {
     kind: 'CW_SAVE',
-    schemaVersion: 2,
+    schemaVersion: SAVE_SCHEMA_VERSION,
     contentVersion: CONTENT_VERSION,
     sessionId,
     revision: 1,
@@ -90,7 +91,14 @@ export function parseSave(raw: unknown): LoadResult {
       error: '该存档来自旧版本（schema 1），与本版不兼容；可另开新局，旧文件已保留。',
     };
   }
-  if (typeof v !== 'number' || v > 2) return { ok: false, error: '存档来自更新版本的游戏，请升级后再试。' };
+  if (v === 2) {
+    return {
+      ok: false,
+      error: '该存档来自证据系统改版前的版本（schema 2），进度不能直接延续。可另开新局重新开始；原文件不会被覆盖，如需保留请先导出备份。',
+    };
+  }
+  if (typeof v !== 'number' || v > SAVE_SCHEMA_VERSION)
+    return { ok: false, error: '存档来自更新版本的游戏，请升级后再试。' };
   if (typeof o.sessionId !== 'string' || !Array.isArray(o.events))
     return { ok: false, error: '存档结构不完整。' };
   if (!o.events.every(isValidEvent)) return { ok: false, error: '事件日志含无法识别的条目。' };
@@ -109,7 +117,7 @@ export function parseSave(raw: unknown): LoadResult {
     ok: true,
     save: {
       kind: 'CW_SAVE',
-      schemaVersion: 2,
+      schemaVersion: SAVE_SCHEMA_VERSION,
       contentVersion: CONTENT_VERSION,
       sessionId: o.sessionId,
       revision: typeof o.revision === 'number' ? o.revision : 1,
@@ -150,6 +158,7 @@ export const DEFAULT_SETTINGS: SettingsData = {
   volume: 0.8,
   textScale: 1,
   reducedMotion: 'follow-system',
+  walkthrough: false,
 };
 
 export function loadSettings(storage: KVStorage): SettingsData {

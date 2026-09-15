@@ -57,7 +57,7 @@ async function onImportFile(e: Event): Promise<void> {
 
     <div class="start-shell">
       <section class="story" aria-label="明日随访简介">
-        <p class="eyebrow mono">CHENGWAN / NIGHT REVIEW / CASE 0617</p>
+        <p class="eyebrow mono">澄湾 · 夜班复核 · 案件 0617</p>
         <h1>明日随访</h1>
         <p class="premise">你将接手一次夜班外部复核。<br />六名患者，只有一份记录等待签认。</p>
 
@@ -72,7 +72,7 @@ async function onImportFile(e: Event): Promise<void> {
 
       <section class="terminal" aria-label="开始游戏">
         <div class="terminal-head">
-          <span class="mono">EXTERNAL REVIEW TERMINAL</span>
+          <span class="mono">外部复核终端</span>
           <span>值班接入 03:17</span>
         </div>
         <p class="section-label">今晚的任务</p>
@@ -121,6 +121,14 @@ async function onImportFile(e: Event): Promise<void> {
               @click="settings.update({ subtitles: !settings.data.subtitles })"
             >
               字幕：{{ settings.data.subtitles ? '开' : '关' }}
+            </button>
+            <button
+              class="ghost"
+              data-testid="start:walkthrough"
+              :class="{ active: settings.data.walkthrough }"
+              @click="settings.update({ walkthrough: !settings.data.walkthrough })"
+            >
+              测试模式（显示通关提示）：{{ settings.data.walkthrough ? '开' : '关' }}
             </button>
           </div>
           <label class="import">

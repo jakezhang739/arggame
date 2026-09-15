@@ -47,6 +47,8 @@ export interface StatementRecord {
   id: string;
   patientId: string;
   text: string;
+  /** 当前医疗选择（10册 §4 已批）："继续随访"≠"强迫继续一切治疗"。 */
+  currentChoice?: string;
   sourceEvidence: string;
   unlockKey: string;
   page: string;

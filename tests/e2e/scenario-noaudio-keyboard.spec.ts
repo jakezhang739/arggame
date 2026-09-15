@@ -69,13 +69,13 @@ test('无音频纯键盘：SELF 全程焦点操作，200% 字体无横向溢出'
   await kSpace(page, 'p05:ev--EV01');
   await kSpace(page, 'p05:ev--EV06');
   await kEnter(page, 'p05:submit-p1');
-  await expect(page.getByText('复查已受理')).toBeVisible();
+  await expect(page.getByTestId('p05:p1-done')).toBeVisible();
 
   // 无音频路径：展开字幕 → 文字确认（不点播放）
   await kEnter(page, 'p05:transcript');
   await expect(page.locator('p.transcript')).toContainText('你那边的交接联，还写着名字吗？');
   await kEnter(page, 'p05:ack-aud01');
-  await expect(page.getByText('✓ EV12 已取得')).toBeVisible();
+  await expect(page.getByText('林闻的留言已保存为证据')).toBeVisible();
   await kEnter(page, 'p05:submit-restore');
   await expect(page.getByText('R03／许棠的关联已按原始交接恢复')).toBeVisible();
   await page.screenshot({ path: `${SHOTS}/sc2-p05-restored-200pct.png`, fullPage: true });

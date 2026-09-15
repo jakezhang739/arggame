@@ -87,7 +87,7 @@ const layoutStyle = computed(() => ({
   gap: var(--space-4);
   padding: var(--space-3) clamp(var(--space-4), 3vw, var(--space-6));
   border-bottom: 1px solid rgba(151, 166, 157, 0.9);
-  background: rgba(248, 250, 248, 0.93);
+  background: rgba(248, 250, 248, 0.98);
   box-shadow: 0 2px 12px rgba(19, 43, 34, 0.06);
   backdrop-filter: blur(14px) saturate(120%);
 }
@@ -298,7 +298,7 @@ const layoutStyle = computed(() => ({
   .workspace-shell {
     width: min(100% - 28px, var(--content-width));
     padding-top: var(--space-6);
-    padding-bottom: 88px;
+    padding-bottom: 132px; /* 右下角固定「叙事轨迹」入口预留空间，避免遮挡内容末行 */
   }
 
   .layout-foot {

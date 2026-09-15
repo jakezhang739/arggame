@@ -13,7 +13,19 @@ const router = useRouter();
 const game = useGameStore();
 
 const endingId = computed(() => String(route.params.endingId ?? 'A') as 'A' | 'B' | 'C');
-const data = computed(() => content.endings[endingId.value] as { title: string; trigger: string; ui: string; body: string });
+const data = computed(
+  () =>
+    content.endings[endingId.value] as {
+      title: string;
+      trigger: string;
+      ui: string;
+      body: string;
+      gains?: string[];
+      costs?: string[];
+      sixResults?: string | null;
+      finalSoundNote?: string | null;
+    },
+);
 
 function clipSpeech(id: string): string {
   const clips = (content.audioManifest as { clips: Record<string, { speech: string }> }).clips;
@@ -42,11 +54,24 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
 
 <template>
   <div class="ending" :data-testid="`p15:ending--${endingId}`">
-    <p class="eyebrow mono">NIGHT REVIEW / RESULT</p>
+    <p class="eyebrow mono">夜班复核 · 结果</p>
     <h1>{{ data.title }}</h1>
 
     <section class="panel result-panel">
       <p class="body">{{ data.body }}</p>
+
+      <!-- 真实收益 / 真实代价（10册 §5 已批）：每个方案都有得有失 -->
+      <div v-if="data.gains?.length || data.costs?.length" class="gains-costs">
+        <div class="gc gc-gains">
+          <h3>真实收益</h3>
+          <ul v-if="data.gains?.length"><li v-for="(g, i) in data.gains" :key="i">{{ g }}</li></ul>
+        </div>
+        <div class="gc gc-costs">
+          <h3>真实代价</h3>
+          <ul v-if="data.costs?.length"><li v-for="(c, i) in data.costs" :key="i">{{ c }}</li></ul>
+        </div>
+      </div>
+
       <p class="ui mono" data-testid="p15:ui">{{ data.ui }}</p>
       <template v-if="endingId === 'A'">
         <AudioFragment
@@ -61,6 +86,9 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
       <template v-else>
         <AudioFragment audio-id="AUD11" title="林闻的新交班（AUD11）" :transcript="clipSpeech('AUD11')" />
       </template>
+
+      <h2 v-if="data.sixResults">六人的结果</h2>
+      <p v-if="data.sixResults" class="six">{{ data.sixResults }}</p>
       <template v-if="endingId === 'C'">
         <h2>下一班 · 0617 普通病历</h2>
         <ul class="followups">
@@ -69,6 +97,7 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
           </li>
         </ul>
         <p class="muted small">“下一班”为故事内日期；活跃时钟不加 24 小时。</p>
+        <p v-if="data.finalSoundNote" class="final-note" data-testid="p15:final-note">{{ data.finalSoundNote }}</p>
       </template>
       <template v-if="endingId === 'B'">
         <p class="muted">六份记录：封存 · 仍待联系。不伪造死亡或救回。</p>
@@ -113,9 +142,20 @@ const FOLLOWUPS = (['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] as const).map((id)
 .eyebrow { margin: 0 0 var(--space-2); color: var(--clinical); font-size: .7rem; font-weight: 750; letter-spacing: .12em; }
 .result-panel { border-top-width: 3px; }
 .body { white-space: pre-wrap; font-size: 1.05em; line-height: 1.8; }
+.gains-costs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin: var(--space-3) 0; }
+.gc { border-radius: var(--radius); padding: var(--space-3); }
+.gc-gains { background: rgba(36, 90, 72, 0.07); border: 1px solid rgba(36, 90, 72, 0.25); }
+.gc-costs { background: rgba(168, 92, 85, 0.07); border: 1px solid rgba(168, 92, 85, 0.28); }
+.gc h3 { margin: 0 0 var(--space-2); font-size: 0.85rem; letter-spacing: 0.05em; }
+.gc-gains h3 { color: #245a48; }
+.gc-costs h3 { color: #8d4a44; }
+.gc ul { margin: 0; padding-left: 1.2em; font-size: 0.88em; line-height: 1.7; }
+.six { font-size: 0.95em; line-height: 1.8; }
+.final-note { white-space: pre-wrap; border-left: 3px solid #ad8a42; background: rgba(213, 170, 83, 0.08); border-radius: var(--radius); padding: var(--space-2) var(--space-3); font-size: 0.95em; }
 .ui { background: #eef1ef; border-radius: var(--radius); padding: var(--space-2) var(--space-3); }
 .followups { padding-left: var(--space-4); }
 .followups li { margin: var(--space-1) 0; }
+@media (max-width: 768px) { .gains-costs { grid-template-columns: 1fr; } }
 .actionrow { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 .audit-details { margin-top: var(--space-4); border-top: 1px solid var(--line); padding-top: var(--space-3); }
 .audit-details summary { color: var(--muted); font-size: .76rem; }

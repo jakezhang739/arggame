@@ -10,8 +10,8 @@ export function engineToSave(engine: TestEngine): SaveData {
   const last = engine.events.at(-1);
   return {
     kind: 'CW_SAVE',
-    schemaVersion: 2,
-    contentVersion: '1.1',
+    schemaVersion: 3,
+    contentVersion: '1.2',
     sessionId: engine.sessionId,
     revision: 1,
     startedAtMs: Date.now(),
@@ -161,14 +161,14 @@ export const app = {
       await page.getByTestId(`p05:ev--${id}`).check();
     }
     await page.getByTestId('p05:submit-p1').click();
-    await expect(page.getByText('复查已受理')).toBeVisible();
+    await expect(page.getByTestId('p05:p1-done')).toBeVisible();
   },
 
   async ackAud01ByText(page: Page): Promise<void> {
     await page.getByTestId('p05:transcript').click();
     await expect(page.locator('p.transcript')).toContainText('你那边的交接联，还写着名字吗？');
     await page.getByTestId('p05:ack-aud01').click();
-    await expect(page.getByText('✓ EV12 已取得')).toBeVisible();
+    await expect(page.getByText('林闻的留言已保存为证据')).toBeVisible();
   },
 
   async restoreIdentity(page: Page, source?: 'EV01' | 'EV02'): Promise<void> {
@@ -223,7 +223,7 @@ export const app = {
   async solveForumTagging(page: Page): Promise<void> {
     await page.goto(`${APP}/forum`);
     await page.getByTestId('p06:open-ev14').click();
-    await expect(page.getByText('已取得：梦境帖原始数据（EV14）')).toBeVisible();
+    await expect(page.getByText('已取得：《梦境帖》原始数据')).toBeVisible();
     for (const pid of ['R01', 'R02', 'R03']) {
       await page.getByTestId(`p06:post-check--${pid}`).check();
     }
@@ -231,10 +231,10 @@ export const app = {
       await page.getByTestId(`p06:tag--${tag}`).check();
     }
     await page.getByTestId('p06:submit-tag').click();
-    await expect(page.getByText('三段梦境帖已用')).toBeVisible();
+    await expect(page.getByTestId('p06:linked-done')).toBeVisible();
   },
 
-  /** P07：两图配对 + M-7 + p3 三联 + EV18。 */
+  /** P07：两图配对 + p3 三联 + EV18（M-7 已降为可选短材料，不再是主线谜题）。 */
   async solveArchive(page: Page, cause: 'SELF' | 'REPLAY'): Promise<void> {
     await page.goto(`${APP}/archive`);
     await page.getByTestId('p07:open-ev15').click();
@@ -242,14 +242,7 @@ export const app = {
     await page.getByTestId('p07:pair--desk').selectOption('提词位');
     await page.getByTestId('p07:pair--seat').selectOption('观众席外席');
     await page.getByTestId('p07:submit-pairs').click();
-    await expect(page.getByText('✓ 空间匹配完成（EV16）')).toBeVisible();
-
-    await page.getByTestId('p07:open-ev17').click();
-    await page.getByTestId('p07:m7-choice').selectOption('INSIDE_STRUCTURE');
-    await page.getByTestId('p07:m7-ev--EV17').check();
-    await page.getByTestId('p07:m7-ev--EV16').check();
-    await page.getByTestId('p07:submit-m7').click();
-    await expect(page.getByText('✓ M-7 判断完成')).toBeVisible();
+    await expect(page.getByText('✓ 空间匹配完成')).toBeVisible();
 
     await page.getByTestId('p07:p3-action').selectOption('AFFIRM_ENDING');
     await page.getByTestId('p07:p3-seat').selectOption('SEAT_W07');
@@ -257,10 +250,10 @@ export const app = {
     await page.getByTestId('p07:submit-p3').click();
     await expect(page.getByText('✓ 剧场关系已确认')).toBeVisible();
     await page.getByTestId('p07:open-ev18').click();
-    await expect(page.getByText('✓ EV18 已取得')).toBeVisible();
+    await expect(page.getByText('《第七份记录》已取得')).toBeVisible();
   },
 
-  /** P08：p4 标记 + R-NM 判断。 */
+  /** P08：p4 标记（R-NM 已降为可选解释卡，不再是通关门槛）。 */
   async solveCompare(page: Page): Promise<void> {
     await page.goto(`${APP}/compare`);
     await page.getByTestId('p08:open-ev19').click();
@@ -268,12 +261,9 @@ export const app = {
     await page.getByTestId('diff:marker--TYPO').check();
     await page.getByTestId('diff:marker--SOURCE_ID').check();
     await page.getByTestId('p08:submit-p4').click();
-    await expect(page.getByText('✓ 来源比较成立（EV21）')).toBeVisible();
-
+    await expect(page.getByTestId('p08:p4-done')).toBeVisible();
     await page.getByTestId('p08:open-ev22').click();
-    await page.getByTestId('p08:rnm--ONE_TERMINATION_INTERFACE').check();
-    await page.getByTestId('p08:submit-rnm').click();
-    await expect(page.getByText('✓ 判断完成：一个终止接口，两种译文')).toBeVisible();
+    await expect(page.getByText('《终止接口捕获日志》已取得')).toBeVisible();
   },
 
   /** P09：跑指定配置并提交正确结论（B+D / B+F / 双变量）。 */

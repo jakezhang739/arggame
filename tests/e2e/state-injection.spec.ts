@@ -45,7 +45,7 @@ test.describe('里程碑夹具注入', () => {
     ]);
     await page.getByTestId('p05:ev11-unreliable').check();
     await page.getByTestId('p05:submit-p2').click();
-    await expect(page.getByText('时间线已重建')).toBeVisible();
+    await expect(page.getByTestId('p05:p2-done')).toBeVisible();
 
     // P04 已成回看态：不能再签认
     await page.goto('/arggame/#/followup/review/R03');

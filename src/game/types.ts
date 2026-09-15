@@ -270,6 +270,8 @@ export interface EvidenceItem {
   projectionKey?: string;
   generatedKey?: string;
   supports: PuzzleId[];
+  /** 核心/可选分层（10册 §6 已批清单）：仅影响呈现分组，不影响取得与判定。 */
+  tier?: 'core' | 'optional';
 }
 
 export interface ContentEntry {
@@ -300,8 +302,8 @@ export interface WitnessRecord {
 
 export interface SaveData {
   kind: 'CW_SAVE';
-  schemaVersion: 2;
-  contentVersion: '1.1';
+  schemaVersion: 3;
+  contentVersion: '1.2';
   sessionId: string;
   revision: number;
   startedAtMs: number;
@@ -321,12 +323,14 @@ export interface SettingsData {
   volume: number;
   textScale: 1 | 1.25 | 1.5 | 2;
   reducedMotion: 'follow-system' | 'on' | 'off';
+  /** 测试模式：直接显示各谜题的通关答案（不影响结局与事件日志）。 */
+  walkthrough: boolean;
 }
 
 export interface ExportData {
   kind: 'CW_EXPORT';
-  schemaVersion: 2;
-  contentVersion: '1.1';
+  schemaVersion: 3;
+  contentVersion: '1.2';
   save: SaveData;
 }
 

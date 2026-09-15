@@ -171,13 +171,13 @@ export function derivePhase(events: GameEvent[]): { phase: GamePhase; lastMainPh
       case 1: // R03_PREARCHIVED → T2
         if (e.code === 'LINK_IDENTITY') advanceTo(2);
         break;
-      case 2: // IDENTITY_RESTORED → T3（五件事）
+      case 2: // IDENTITY_RESTORED → T3（四件必做：时间线/帖子/平面/观众；假说位可选——M-7 已降为短材料，07册 §4.1）
         if (e.code === 'TIMELINE_SOLVED') theaterMarks |= 1;
         if (e.code === 'TAG_POSTS') theaterMarks |= 2;
         if (e.code === 'MATCH_FLOORPLAN') theaterMarks |= 4;
         if (e.code === 'INFER_MASQUE' && p.choice === 'INSIDE_STRUCTURE') theaterMarks |= 8;
         if (e.code === 'LINK_AUDIENCE') theaterMarks |= 16;
-        if (theaterMarks === 31) advanceTo(3);
+        if ((theaterMarks & 23) === 23) advanceTo(3);
         break;
       case 3: // THEATER_DISCOVERED → T4
         if (e.code === 'PROVE_SHARED_SOURCE') advanceTo(4);

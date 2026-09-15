@@ -27,7 +27,7 @@ test.describe('草稿与进度恢复', () => {
     await expect(page.getByTestId('p05:ev--EV06')).toBeChecked();
 
     await page.getByTestId('p05:submit-p1').click();
-    await expect(page.getByText('复查已受理')).toBeVisible();
+    await expect(page.getByTestId('p05:p1-done')).toBeVisible();
   });
 
   test('p2 排序草稿刷新保留，可继续排完并提交', async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe('草稿与进度恢复', () => {
     await app.reorderTimeline(page, CORRECT);
     await page.getByTestId('p05:ev11-unreliable').check();
     await page.getByTestId('p05:submit-p2').click();
-    await expect(page.getByText('时间线已重建')).toBeVisible();
+    await expect(page.getByTestId('p05:p2-done')).toBeVisible();
   });
 
   test('UI 完成的进度刷新不丢：恢复许棠后重载仍在', async ({ page }) => {

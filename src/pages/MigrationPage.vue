@@ -15,7 +15,7 @@ const paperAcked = ref(false);
 const ackedRules = ref<boolean[]>(rules.items.map(() => false));
 const snapshotOpen = ref(false);
 const downloadInitiated = ref(false);
-const deskPhotoUrl = `${import.meta.env.BASE_URL}images/nurse-desk.png`;
+const deskPhotoUrl = `${import.meta.env.BASE_URL}images/nurse-desk-v2.jpg`;
 const photoMissing = ref(false);
 
 const handoverSecured = computed(() => game.state.facts.handoverSecured);
@@ -51,7 +51,7 @@ function enter(): void {
 <template>
   <div class="migration">
     <header class="page-intro">
-      <p class="eyebrow mono">NIGHT HANDOVER / RECORD 00</p>
+      <p class="eyebrow mono">夜班交接 · 记录 00</p>
       <h1>夜班交接</h1>
       <p>今晚你只需要处理一份待签病历。开始前，先留下复核发生之前的名单。</p>
       <div class="safety-line"><AppIcon name="check" :size="17" /> 查看材料不会改变案件；任何提交都会在确认前写明范围。</div>
@@ -107,7 +107,7 @@ function enter(): void {
           <figcaption class="mono">NURSE DESK / BEFORE HANDOVER</figcaption>
         </figure>
         <div class="witness-copy">
-          <p class="eyebrow mono">OPTIONAL / PHYSICAL NOTE</p>
+          <p class="eyebrow mono">可选 · 纸面记录</p>
           <h2 id="step2">可选：在纸上留三行</h2>
           <p>这不是谜题，也不会影响结局。它只是给在线记录之外留一个位置。</p>
           <blockquote class="copylines">
@@ -206,7 +206,7 @@ function enter(): void {
 .rules input { margin-top: 3px; }
 .rules span { display: grid; grid-template-columns: 24px 1fr; gap: var(--space-2); align-items: start; font-size: .78rem; line-height: 1.55; }
 .rules small { color: var(--muted); font-size: .63rem; }
-.enter-bar { position: sticky; z-index: 12; bottom: var(--space-3); display: flex; justify-content: space-between; gap: var(--space-4); align-items: center; margin-top: var(--space-4); border: 1px solid #b7a678; border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4); background: rgba(247,240,221,.96); box-shadow: 0 16px 38px rgba(38,31,17,.16); backdrop-filter: blur(12px); }
+.enter-bar { position: static; z-index: 12; display: flex; justify-content: space-between; gap: var(--space-4); align-items: center; margin-top: var(--space-4); border: 1px solid #b7a678; border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4); background: rgba(247,240,221,.96); box-shadow: 0 6px 18px rgba(38,31,17,.1); }
 .enter-bar.ready { border-color: #557a68; background: rgba(231,241,235,.97); }
 .enter-bar > div { display: grid; }
 .enter-bar strong { font-size: .83rem; }

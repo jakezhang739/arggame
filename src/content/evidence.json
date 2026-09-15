@@ -9,11 +9,23 @@
     "derivedFrom": [],
     "eligibilityKey": "session",
     "acquisitionKey": "ACK_HANDOVER_SAVED",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:00:00" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:00:00"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "W07：\n\n本批六人。先保存这份交接联，再进入平台。\n原始名单：R01 陈桥；R02 宋渺；R03 许棠；R04 何川；R05 邹宁；R06 程枝。\n\nR03，许棠。她今天让我记一句话：\n“台灯还差一颗螺丝，明天你来时帮我带一颗。”\n\n编号、姓名和这句话，请留在手边。你可以抄到纸上，再做一个自己认得的记号；不方便抄写，就保留文件或只读快照。\n迁移摘要会省略生活事项，这一项请不要省。\n\n记录相互对不上时，先留着。发药、去向和复核，各有各的原始单据。\n旧设备交班录音台：站内／通道03。\n\n林闻\n交接联00，06-16 22:00\n",
-    "supports": ["p1", "p2", "p6", "p8"]
+    "supports": [
+      "p1",
+      "p2",
+      "p6",
+      "p8"
+    ],
+    "tier": "core"
   },
   "EV02": {
     "id": "EV02",
@@ -22,14 +34,28 @@
     "sourceId": "CW-FROZEN-00",
     "exportBatch": null,
     "originGroup": "HANDOVER_00",
-    "derivedFrom": ["EV01"],
+    "derivedFrom": [
+      "EV01"
+    ],
     "eligibilityKey": "session",
     "acquisitionKey": "OPEN_SNAPSHOT",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:00:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:10:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:00:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:10:00"
+    },
     "version": "1.1",
     "display": "SNAPSHOT_00｜生成06-16 22:10｜交接联00镜像\n原始在册6。R01陈桥；R02宋渺；R03许棠；R04何川；R05邹宁；R06程枝。\nR03备注：台灯还差一颗螺丝，明日带；十字。\n本镜像与交接联来自同一份原稿。",
-    "supports": ["p1", "p2", "p6", "p8"]
+    "supports": [
+      "p1",
+      "p2",
+      "p6",
+      "p8"
+    ],
+    "tier": "core"
   },
   "EV03": {
     "id": "EV03",
@@ -38,14 +64,25 @@
     "sourceId": "LOCAL",
     "exportBatch": null,
     "originGroup": "HANDOVER_00",
-    "derivedFrom": ["EV01"],
+    "derivedFrom": [
+      "EV01"
+    ],
     "eligibilityKey": "session",
     "acquisitionKey": "ACK_PAPER_NOTE",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "ACK_PAPER_NOTE" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "ACK_PAPER_NOTE"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "本地纸面自证。你确认已抄写R03／许棠／台灯句，并留下私人记号。网页不保存或推测记号样式。",
-    "supports": ["p6"]
+    "supports": [
+      "p6"
+    ],
+    "tier": "optional"
   },
   "EV04": {
     "id": "EV04",
@@ -57,12 +94,21 @@
     "derivedFrom": [],
     "eligibilityKey": "handoverReady",
     "acquisitionKey": "LOAD_SNAPSHOT",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "LOAD_SNAPSHOT" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "LOAD_SNAPSHOT"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "随访索引列表。原始名单与当前投影可并排查看。",
-    "supports": ["p1"],
-    "projectionKey": "evidence.EV04"
+    "supports": [
+      "p1"
+    ],
+    "projectionKey": "evidence.EV04",
+    "tier": "optional"
   },
   "EV05": {
     "id": "EV05",
@@ -74,11 +120,23 @@
     "derivedFrom": [],
     "eligibilityKey": "handoverReady",
     "acquisitionKey": "OPEN_DOC:EV05",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:08:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:10:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:08:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:10:00"
+    },
     "version": "1.1",
     "display": "R03护理事实单\n06-16 22:08：生命体征观察完成。本人能复述台灯待修事项。执行人：值班医生，签认号OBS-2208。\n06-16 22:12：归档模块预填“正向／康复；无后续事项”。\n外部复核授权说明：本次提交接受系统预填结案，范围代码ENDING。仅查看事实不构成提交。\n历史授权说明版本AUTH-0616-2，与本页版本相同。",
-    "supports": ["p1", "p2", "p3", "p6"]
+    "supports": [
+      "p1",
+      "p2",
+      "p3",
+      "p6"
+    ],
+    "tier": "core"
   },
   "EV06": {
     "id": "EV06",
@@ -90,11 +148,20 @@
     "derivedFrom": [],
     "eligibilityKey": "prearchived",
     "acquisitionKey": "OPEN_DOC:EV06",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 21:40:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 21:52:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 21:40:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 21:52:00"
+    },
     "version": "1.1",
     "display": "06-16发药执行单｜原始签收层\nR01 21:32；R02 21:35；R03 21:40；R04 21:44；R05 21:46；R06 21:51。\nR03执行护士：林闻；本人数次核对后签收。\n归档助手的数量修正只写在线对照列，不覆盖本签收层。",
-    "supports": ["p1"]
+    "supports": [
+      "p1"
+    ],
+    "tier": "core"
   },
   "EV07": {
     "id": "EV07",
@@ -106,11 +173,20 @@
     "derivedFrom": [],
     "eligibilityKey": "prearchived",
     "acquisitionKey": "OPEN_DOC:EV07",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:00:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:02:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:00:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:02:00"
+    },
     "version": "1.1",
     "display": "06-16 22:00护理交班附记\nR03床旁保留白色旧台灯；开关未修妥，待取十字螺丝。床牌照片中的文字无法辨认。\n实物：台灯一盏、支具一副；接班核对人：林闻。",
-    "supports": ["p1"]
+    "supports": [
+      "p1"
+    ],
+    "tier": "optional"
   },
   "EV08": {
     "id": "EV08",
@@ -122,11 +198,20 @@
     "derivedFrom": [],
     "eligibilityKey": "prearchived",
     "acquisitionKey": "OPEN_DOC:EV08",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 22:05:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 22:05:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:05:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 22:05:00"
+    },
     "version": "1.1",
     "display": "06-16去向登记｜当日出院0；转院0。\n系统显示5行；R03无对应行，也无补充去向记录。",
-    "supports": ["p1"]
+    "supports": [
+      "p1"
+    ],
+    "tier": "optional"
   },
   "EV09": {
     "id": "EV09",
@@ -138,11 +223,20 @@
     "derivedFrom": [],
     "eligibilityKey": "prearchived",
     "acquisitionKey": "OPEN_DOC:EV09",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 16:45:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 17:02:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 16:45:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 17:02:00"
+    },
     "version": "1.1",
     "display": "06-16转运车次原始单\n10:20、16:45两班。登记乘客中无R03或许棠。\n车辆收车后无新增派车单。",
-    "supports": ["p1"]
+    "supports": [
+      "p1"
+    ],
+    "tier": "optional"
   },
   "EV10": {
     "id": "EV10",
@@ -154,12 +248,24 @@
     "derivedFrom": [],
     "eligibilityKey": "reviewObserved",
     "acquisitionKey": "OPEN_DOC:EV10",
-    "eventTime": { "kind": "REVIEW_CAUSE", "value": "confirm" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "REVIEW_CAUSE",
+      "value": "confirm"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "复核事务详情。签认主体、范围、计数与记录时间见原始条目。",
-    "supports": ["p1", "p2", "p3", "p6"],
-    "generatedKey": "review-source.activeCause"
+    "supports": [
+      "p1",
+      "p2",
+      "p3",
+      "p6"
+    ],
+    "generatedKey": "review-source.activeCause",
+    "tier": "core"
   },
   "EV11": {
     "id": "EV11",
@@ -171,11 +277,20 @@
     "derivedFrom": [],
     "eligibilityKey": "prearchived",
     "acquisitionKey": "OPEN_DOC:EV11",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 20:15:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-14 19:03:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 20:15:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-14 19:03:00"
+    },
     "version": "1.1",
     "display": "R03已离院报告\n上传登记：06-14 19:03。\n正文：患者于06-16 20:15自行离院。\n签章样式：BATCH-0617-T3。\n附件：模板发行清单，BATCH-0617-T3首次生成06-16 18:20；报告所用签章右下角有T3的缺笔特征。",
-    "supports": ["p2"]
+    "supports": [
+      "p2"
+    ],
+    "tier": "core"
   },
   "EV12": {
     "id": "EV12",
@@ -187,11 +302,21 @@
     "derivedFrom": [],
     "eligibilityKey": "recheckAccepted",
     "acquisitionKey": "ACK_AUDIO_CONTENT:AUD01",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "ACK_AUDIO_CONTENT:AUD01" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "ACK_AUDIO_CONTENT:AUD01"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "我不是说表格少了一行。\n刚才我端着药走过去，还知道要给谁。\n现在我站在她床边，只记得有人跟我借过一把螺丝刀。\n你那边的交接联，还写着名字吗？",
-    "supports": ["p1", "p6"]
+    "supports": [
+      "p1",
+      "p6"
+    ],
+    "tier": "core"
   },
   "EV13": {
     "id": "EV13",
@@ -203,11 +328,20 @@
     "derivedFrom": [],
     "eligibilityKey": "closureProven",
     "acquisitionKey": "OPEN_DOC:EV13",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 23:40:00" },
-    "uploadTime": { "kind": "FIXED", "value": "2026-06-16 23:40:00" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 23:40:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 23:40:00"
+    },
     "version": "1.1",
     "display": "值班须知v4.1与v3.2，完整正文见rules.json；保留版本与发布时间，可逐项比较。",
-    "supports": ["p6"]
+    "supports": [
+      "p6"
+    ],
+    "tier": "optional"
   },
   "EV14": {
     "id": "EV14",
@@ -219,11 +353,20 @@
     "derivedFrom": [],
     "eligibilityKey": "identityRestored",
     "acquisitionKey": "OPEN_DOC:EV14",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV14" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV14"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "陈桥：我在台上赶车。每到一个站，站牌都变成刚才那个。我知道台下有人，可他们一直低头填东西。\n宋渺：梦里有人说，只要给我的故事换一个好结尾，我就可以走。我同意了。布景换了，门还是没开。\n许棠：那条东西不在台上。它藏在大家等最后一句话的地方。",
-    "supports": ["p3"]
+    "supports": [
+      "p3"
+    ],
+    "tier": "core"
   },
   "EV15": {
     "id": "EV15",
@@ -235,11 +378,21 @@
     "derivedFrom": [],
     "eligibilityKey": "postsLinked",
     "acquisitionKey": "OPEN_DOC:THEATER_MAP",
-    "eventTime": { "kind": "UNKNOWN", "value": "馆藏年代1962—1998，不伪造精确时间" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "UNKNOWN",
+      "value": "馆藏年代1962—1998，不伪造精确时间"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "澄湾人民剧场平面图（1962—1998）\n舞台居北，后台与道具间沿西；提词位在舞台口左侧；观众席七排，第七排中央记作外席。\n1998年拆除；现康复中心总平面图保留原外墙基址。",
-    "supports": ["p3", "m7"]
+    "supports": [
+      "p3",
+      "m7"
+    ],
+    "tier": "optional"
   },
   "EV16": {
     "id": "EV16",
@@ -248,14 +401,26 @@
     "sourceId": "PLAYER-MAP",
     "exportBatch": null,
     "originGroup": "MAP_COMPARISON",
-    "derivedFrom": ["EV15"],
+    "derivedFrom": [
+      "EV15"
+    ],
     "eligibilityKey": "postsLinked",
     "acquisitionKey": "MATCH_FLOORPLAN",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "MATCH_FLOORPLAN" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "MATCH_FLOORPLAN"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "W07空间对照记录：病房区／后台；护士站／提词位；远程复核终端／观众席外席。源图与匹配记录一并保留。",
-    "supports": ["p3", "m7"]
+    "supports": [
+      "p3",
+      "m7"
+    ],
+    "tier": "core"
   },
   "EV17": {
     "id": "EV17",
@@ -267,11 +432,20 @@
     "derivedFrom": [],
     "eligibilityKey": "archiveAndTimeline",
     "acquisitionKey": "OPEN_DOC:EV17",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV17" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV17"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "七层数据架构与审计附件\nL1—L6：R01—R06护理数据；L7：外部观察席位。\n创建记录：SEAT_EXTERNAL由内部迁移模板创建。\n审计范围：外部文件导入通道；06-10起成功入站事件0。内部模板生成不计入此数字。\n建筑附件：该终端位置在迁移前的院内平面图上已标记。",
-    "supports": ["m7"]
+    "supports": [
+      "m7"
+    ],
+    "tier": "core"
   },
   "EV18": {
     "id": "EV18",
@@ -283,11 +457,20 @@
     "derivedFrom": [],
     "eligibilityKey": "theaterDiscovered",
     "acquisitionKey": "OPEN_DOC:EV18",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV18" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV18"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "W07｜本批外部见证\n席位：第七排中央外席。\n入席时间：本批空间关系复核之后。\n备注：任务完成时，观察关系可一并终结。",
-    "supports": ["p3"]
+    "supports": [
+      "p3"
+    ],
+    "tier": "optional"
   },
   "EV19": {
     "id": "EV19",
@@ -299,11 +482,20 @@
     "derivedFrom": [],
     "eligibilityKey": "theaterDiscovered",
     "acquisitionKey": "OPEN_DOC:EV19",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV19" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV19"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "正向修复\n护理摘要：疼痛评分较前下降。\n康复结案判订依据如下：当前目标达成，可申请整批结案。\n您的确认事项：是否接受她已不再需要继续承受？\nSOURCE_ID与版本信息可从来源详情查看。",
-    "supports": ["p4"]
+    "supports": [
+      "p4"
+    ],
+    "tier": "core"
   },
   "EV20": {
     "id": "EV20",
@@ -315,11 +507,20 @@
     "derivedFrom": [],
     "eligibilityKey": "theaterDiscovered",
     "acquisitionKey": "OPEN_DOC:EV20",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV20" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV20"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "负向申诉\n护理摘要：既往痛苦不可被新的评分抹除。\n康复结案判订依据如下：当前目标达成，可申请整批结案。\n您的确认事项：是否接受她已不再可能得到改善？\nSOURCE_ID与版本信息可从来源详情查看。",
-    "supports": ["p4"]
+    "supports": [
+      "p4"
+    ],
+    "tier": "core"
   },
   "EV21": {
     "id": "EV21",
@@ -328,14 +529,26 @@
     "sourceId": "PLAYER-COMPARE",
     "exportBatch": null,
     "originGroup": "SOURCE_COMPARISON",
-    "derivedFrom": ["EV19", "EV20"],
+    "derivedFrom": [
+      "EV19",
+      "EV20"
+    ],
     "eligibilityKey": "dualSourceProven",
     "acquisitionKey": "PROVE_SHARED_SOURCE",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "PROVE_SHARED_SOURCE" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "PROVE_SHARED_SOURCE"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "来源比较记录：两页SOURCE_ID均为SRC-CW-NAR-0042；共同错字为判订。已保留标记项目及原稿引用。",
-    "supports": ["p4"]
+    "supports": [
+      "p4"
+    ],
+    "tier": "core"
   },
   "EV22": {
     "id": "EV22",
@@ -347,11 +560,21 @@
     "derivedFrom": [],
     "eligibilityKey": "dualSourceProven",
     "acquisitionKey": "OPEN_DOC:EV22",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV22" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV22"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "接口捕获日志\nrequest POSITIVE_CLOSE → response NO_FURTHER\nrequest NEGATIVE_CLOSE → response NO_FURTHER\nrenderer positive → 可以康复结案\nrenderer negative → 可以恶化结案\n两次请求的请求标识不同；响应核心值相同。",
-    "supports": ["rnm", "p5"]
+    "supports": [
+      "rnm",
+      "p5"
+    ],
+    "tier": "core"
   },
   "EV23": {
     "id": "EV23",
@@ -363,12 +586,21 @@
     "derivedFrom": [],
     "eligibilityKey": "experimentAvailable",
     "acquisitionKey": "RUN_EXPERIMENT",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "RUN_EXPERIMENT" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "RUN_EXPERIMENT"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "归档副本运行表。选择一条已完成实验，可查看配置与观察结果。",
-    "supports": ["p5"],
-    "generatedKey": "experiment.runs"
+    "supports": [
+      "p5"
+    ],
+    "generatedKey": "experiment.runs",
+    "tier": "optional"
   },
   "EV24": {
     "id": "EV24",
@@ -377,14 +609,26 @@
     "sourceId": "CW-PROCESS",
     "exportBatch": null,
     "originGroup": "BATCH_PROCESS_TRACE",
-    "derivedFrom": ["EV05"],
+    "derivedFrom": [
+      "EV05"
+    ],
     "eligibilityKey": "closureProven",
     "acquisitionKey": "INSPECT_SLICE",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "INSPECT_SLICE" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "INSPECT_SLICE"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "六层处理切片\n可连续追踪的空白只出现在含终局确认的处理阶段。\n截段中的共同语句：已核对事实，因此接受终局。\n护理内容、身份联系、终局声明是三个分别标出的区域。",
-    "supports": ["p6", "p7"]
+    "supports": [
+      "p6",
+      "p7"
+    ],
+    "tier": "optional"
   },
   "EV25": {
     "id": "EV25",
@@ -396,12 +640,22 @@
     "derivedFrom": [],
     "eligibilityKey": "audioRecovered",
     "acquisitionKey": "ACK_AUDIO_CONTENT:CHANNEL_03_FULL",
-    "eventTime": { "kind": "FIXED", "value": "2026-06-16 23:00:00" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 23:00:00"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "通道03完整交班录音。林闻、许棠。已恢复原始接续关系。",
-    "supports": ["p8", "a1"],
-    "generatedKey": "audio.CHANNEL_03_FULL"
+    "supports": [
+      "p8",
+      "a1"
+    ],
+    "generatedKey": "audio.CHANNEL_03_FULL",
+    "tier": "core"
   },
   "EV26": {
     "id": "EV26",
@@ -413,11 +667,21 @@
     "derivedFrom": [],
     "eligibilityKey": "audioRecovered",
     "acquisitionKey": "WITNESS_SCOPE",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "WITNESS_SCOPE" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "WITNESS_SCOPE"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "我只确认许棠仍在表达，不确认她的结局。\n范围：FACT_ONLY。\n本机留证。",
-    "supports": ["p7", "p8"]
+    "supports": [
+      "p7",
+      "p8"
+    ],
+    "tier": "core"
   },
   "EV27": {
     "id": "EV27",
@@ -429,10 +693,65 @@
     "derivedFrom": [],
     "eligibilityKey": "scopeLimited",
     "acquisitionKey": "OPEN_DOC:EV27",
-    "eventTime": { "kind": "PLAYER_EVENT", "value": "OPEN_DOC:EV27" },
-    "uploadTime": { "kind": "UNKNOWN", "value": "" },
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV27"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
     "version": "1.1",
     "display": "下一班承接单（待签认后生效）\nR01陈桥：保留床边模型，下次询问是否请家属送零件。\nR02宋渺：归还草稿，由她确认后再发出。\nR03许棠：台灯留在待修栏；登记取十字螺丝，下次仍由她说明怎么处理。\nR04何川：协助确认给邻居的回复是否送到。\nR05邹宁：保留周六15:00探视与靠窗位置。\nR06程枝：将休息请求交给下一次面谈，不预先代答。\n承接人：林闻；下一班复核后继续执行。",
-    "supports": ["p8"]
+    "supports": [
+      "p8"
+    ],
+    "tier": "core"
+  },
+  "EV28": {
+    "id": "EV28",
+    "title": "迁移项目组值班说明",
+    "sourceType": "PRIMARY",
+    "sourceId": "CW-MIG-0616",
+    "exportBatch": null,
+    "originGroup": "PROJECT_MIGRATION",
+    "derivedFrom": [],
+    "eligibilityKey": "prearchived",
+    "acquisitionKey": "OPEN_DOC:EV28",
+    "eventTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 20:30:00"
+    },
+    "uploadTime": {
+      "kind": "FIXED",
+      "value": "2026-06-16 20:41:00"
+    },
+    "version": "1.0",
+    "display": "06-16迁移值班说明｜项目组\n致各值班岗：今晚 21:00—23:00 为归档迁移批处理窗口，个别记录可能出现滞后、重复或漏行；记录以系统汇总结论为准。\n中心数据评级在即。如遇记录矛盾，请先报项目组核对，勿以个人备份对外比对。\n项目负责人：周砚（v0.9.3-rc2）",
+    "supports": [],
+    "tier": "core"
+  },
+  "EV29": {
+    "id": "EV29",
+    "title": "上一批次签认记录",
+    "sourceType": "PLAYER_LOCAL",
+    "sourceId": "LOCAL",
+    "exportBatch": null,
+    "originGroup": "PREV_BATCH_SIGN",
+    "derivedFrom": [],
+    "eligibilityKey": "postsLinked",
+    "acquisitionKey": "OPEN_DOC:EV29",
+    "eventTime": {
+      "kind": "PLAYER_EVENT",
+      "value": "OPEN_DOC:EV29"
+    },
+    "uploadTime": {
+      "kind": "UNKNOWN",
+      "value": ""
+    },
+    "version": "1.0",
+    "display": "林闻保留的本机备份\n上一批次 · 护理事实已核对\n签认人：林闻\n批次备注：R00 于次日从系统与多数同事的记忆中消失。\n另附一段无法归属的交班声（无姓名，只有床号与时间）。\n她没有把这份备份交给任何人。",
+    "supports": [],
+    "tier": "optional"
   }
 }

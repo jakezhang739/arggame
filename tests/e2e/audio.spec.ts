@@ -42,7 +42,7 @@ test('P05 AUD01：波形渲染、点击播放不进入不可用降级', async ({
   await page.getByTestId('p05:ev--EV01').check();
   await page.getByTestId('p05:anomaly--IDENTITY_INDEX').check();
   await page.getByTestId('p05:submit-p1').click();
-  await expect(page.getByText('复查已受理')).toBeVisible();
+  await expect(page.getByTestId('p05:p1-done')).toBeVisible();
 
   const frag = page.getByTestId('audio:frag--AUD01');
   await expect(frag).toBeVisible();

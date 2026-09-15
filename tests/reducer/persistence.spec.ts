@@ -22,12 +22,12 @@ function memoryStorage(): KVStorage {
   };
 }
 
-describe('SaveData v2', () => {
+describe('SaveData v3', () => {
   it('freshSave 结构完整', () => {
     const s = freshSave('W07-ABCD1234');
     expect(s.kind).toBe('CW_SAVE');
-    expect(s.schemaVersion).toBe(2);
-    expect(s.contentVersion).toBe('1.1');
+    expect(s.schemaVersion).toBe(3);
+    expect(s.contentVersion).toBe('1.2');
     expect(s.hashAlgorithm).toBe('sha-256');
     expect(s.drafts.timelineOrder).toEqual([]);
   });
@@ -38,12 +38,21 @@ describe('SaveData v2', () => {
     if (!r.ok) expect(r.error).toContain('不兼容');
   });
 
+  it('v2 存档（Batch 3 之前）明确拒绝并提示重开', () => {
+    const r = parseSave({ kind: 'CW_SAVE', schemaVersion: 2, sessionId: 'W07-X', events: [] });
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.error).toContain('重新开始');
+      expect(r.error).toContain('schema 2');
+    }
+  });
+
   it('更高版本与坏结构拒绝', () => {
+    expect(parseSave({ schemaVersion: 4 }).ok).toBe(false);
     expect(parseSave({ schemaVersion: 3 }).ok).toBe(false);
-    expect(parseSave({ schemaVersion: 2 }).ok).toBe(false);
     expect(
       parseSave({
-        kind: 'CW_SAVE', schemaVersion: 2, contentVersion: '1.1',
+        kind: 'CW_SAVE', schemaVersion: 3, contentVersion: '1.2',
         sessionId: 'W07-X', events: [{ id: 'x', seq: 1, code: 'NOT_REAL' }],
       }).ok,
     ).toBe(false);

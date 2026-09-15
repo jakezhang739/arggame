@@ -3,13 +3,67 @@ import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useGameStore } from '../stores/game';
 import { currentObjective } from '../game/objectives';
+import {
+  canOpenEvidence,
+  CONFLICTING_EVIDENCE,
+  evidenceLocationHint,
+  evidenceSourceLabel,
+  evidenceStatusFor,
+  evidenceView,
+  isAcquired,
+  EVIDENCE_STATUS_LABEL,
+} from '../game/selectors';
+import { content } from '../game/content';
+import type { EvidenceId } from '../game/content-ids';
 import AppIcon from './AppIcon.vue';
 
 const game = useGameStore();
 const objective = computed(() => currentObjective(game.state));
 const evidenceOpen = ref(false);
-const recentEvidence = computed(() => [...game.acquiredEvidence].slice(-4).reverse());
 const ready = computed(() => game.state.facts.handoverSecured && game.state.facts.rulesAcknowledged);
+
+const pinned = computed(() => game.save.pinnedEvidence);
+const PIN_LIMIT = 3;
+
+interface EvidenceRow {
+  id: EvidenceId;
+  title: string;
+  statusLabel: string;
+  status: string;
+  source: string;
+  acquired: boolean;
+  location: string;
+  text: string;
+  tier: 'core' | 'optional';
+}
+
+/** 抽屉展示：已取得 ＋ 当前可取得的材料；核心/可选分层（10册 §6 已批清单）。 */
+const evidenceRows = computed<EvidenceRow[]>(() =>
+  content.evidenceRegistry
+    .filter((item) => isAcquired(game.state, item.id) || canOpenEvidence(game.state, item.id))
+    .map((item) => {
+      const status = evidenceStatusFor(game.state, item.id, pinned.value);
+      return {
+        id: item.id,
+        title: item.title,
+        status,
+        statusLabel: EVIDENCE_STATUS_LABEL[status],
+        source: evidenceSourceLabel(item),
+        acquired: status !== 'unseen',
+        location: evidenceLocationHint(item),
+        text: evidenceView(game.state, item.id).text,
+        tier: item.tier ?? 'core',
+      };
+    }),
+);
+const coreRows = computed(() => evidenceRows.value.filter((r) => r.tier === 'core'));
+const optionalRows = computed(() => evidenceRows.value.filter((r) => r.tier === 'optional'));
+const conflictCount = computed(
+  () => [...CONFLICTING_EVIDENCE].filter((id) => isAcquired(game.state, id)).length,
+);
+const acquiredCount = computed(() => evidenceRows.value.filter((r) => r.acquired).length);
+/** 切片检查完成＝系统改写被实证；此刻「调查记录」揭示为「叙事轨迹」（07册 问题七）。 */
+const trailChallenged = computed(() => game.state.facts.sliceInspected);
 
 function openTrail(): void {
   window.dispatchEvent(new CustomEvent('cw:open-trail'));
@@ -18,7 +72,7 @@ function openTrail(): void {
 
 <template>
   <aside class="investigation-rail" aria-label="W07 调查工具栏">
-    <div class="rail-kicker mono"><AppIcon name="moon" :size="14" /> W07 / NIGHT REVIEW</div>
+    <div class="rail-kicker mono"><AppIcon name="moon" :size="14" /> W07 · 夜班复核</div>
 
     <section class="objective-card" :class="`tone-${objective.tone}`">
       <div class="objective-meta">
@@ -41,26 +95,77 @@ function openTrail(): void {
         <AppIcon name="users" />
         <span><strong>六人病历</strong><small>身份与当前照护</small></span>
       </RouterLink>
-      <button type="button" :aria-expanded="evidenceOpen" @click="evidenceOpen = !evidenceOpen">
+      <button type="button" data-testid="rail:evidence-toggle" :aria-expanded="evidenceOpen" @click="evidenceOpen = !evidenceOpen">
         <AppIcon name="evidence" />
-        <span><strong>已存证据</strong><small>{{ game.acquiredEvidence.length }} 份可回看</small></span>
+        <span><strong>已存证据</strong><small>{{ acquiredCount }} 份可回看</small></span>
       </button>
-      <button v-if="ready" type="button" @click="openTrail">
+      <button v-if="ready" type="button" data-testid="rail:trail-toggle" @click="openTrail">
         <AppIcon name="trail" />
-        <span><strong>调查记录</strong><small>{{ game.trailRows.length }} 个实际动作</small></span>
+        <span>
+          <!-- 07册 问题七：系统改写被实证（切片检查完成）时，「调查记录」揭示为「叙事轨迹」 -->
+          <strong>{{ trailChallenged ? '叙事轨迹' : '调查记录' }}</strong>
+          <small>{{ trailChallenged ? '系统叙述 · 含改写' : `${game.trailRows.length} 个实际动作` }}</small>
+        </span>
       </button>
     </nav>
 
-    <section v-if="evidenceOpen" class="evidence-peek" aria-label="最近取得的证据">
-      <header><span>最近取得</span><span class="mono">{{ game.acquiredEvidence.length }}</span></header>
-      <p v-if="recentEvidence.length === 0" class="empty">完成当前任务后，原始材料会保存在这里。</p>
-      <ul v-else>
-        <li v-for="item in recentEvidence" :key="item.id">
-          <AppIcon name="archive" :size="15" />
-          <span>{{ item.title }}</span>
-          <small class="mono">{{ item.id }}</small>
+    <section v-if="evidenceOpen" class="evidence-drawer" aria-label="证据与对照托盘">
+      <header>
+        <span>对照托盘</span>
+        <span class="mono">已固定 {{ pinned.length }}/{{ PIN_LIMIT }}</span>
+      </header>
+      <p v-if="pinned.length === 0" class="empty">在证据卡上选择「加入对照」，最多固定三份。</p>
+      <ul v-else class="pin-list">
+        <li v-for="pid in pinned" :key="pid">
+          <AppIcon name="pin" :size="15" />
+          <span>{{ content.evidenceRegistry.find((e) => e.id === pid)?.title }}</span>
+          <button type="button" class="unpin" @click="game.togglePin(pid)">移出</button>
         </li>
       </ul>
+      <p v-if="conflictCount" class="conflict-note">
+        {{ conflictCount }} 份材料与其他记录存在矛盾，提交结论前先对照原始版本。
+      </p>
+
+      <header class="drawer-sub">
+        <span>主线材料</span>
+        <span class="mono">{{ coreRows.filter((r) => r.acquired).length }}/{{ coreRows.length }}</span>
+      </header>
+      <p v-if="evidenceRows.length === 0" class="empty">完成当前任务后，原始材料会保存在这里。</p>
+      <ul v-else class="ev-list">
+        <li v-for="row in coreRows" :key="row.id" :class="{ acquired: row.acquired }">
+          <AppIcon :name="row.acquired ? 'archive' : 'arrow'" :size="15" />
+          <div>
+            <span class="ev-title">{{ row.title }}</span>
+            <small class="mono">{{ row.id }}</small>
+            <small v-if="row.acquired" class="ev-tags">
+              <span class="tag" :class="`st-${row.status}`">{{ row.statusLabel }}</span>
+              <span class="tag">{{ row.source }}</span>
+            </small>
+            <small v-else class="ev-hint">可在{{ row.location }}取得</small>
+          </div>
+        </li>
+      </ul>
+
+      <template v-if="optionalRows.length">
+        <header class="drawer-sub">
+          <span>可选调查材料</span>
+          <span class="mono">{{ optionalRows.filter((r) => r.acquired).length }}/{{ optionalRows.length }}</span>
+        </header>
+        <ul class="ev-list">
+          <li v-for="row in optionalRows" :key="row.id" :class="{ acquired: row.acquired }">
+            <AppIcon :name="row.acquired ? 'archive' : 'arrow'" :size="15" />
+            <div>
+              <span class="ev-title">{{ row.title }}</span>
+              <small class="mono">{{ row.id }}</small>
+              <small v-if="row.acquired" class="ev-tags">
+                <span class="tag" :class="`st-${row.status}`">{{ row.statusLabel }}</span>
+                <span class="tag">{{ row.source }}</span>
+              </small>
+              <small v-else class="ev-hint">可在{{ row.location }}取得（可选）</small>
+            </div>
+          </li>
+        </ul>
+      </template>
     </section>
 
     <p class="rail-note"><AppIcon name="check" :size="15" /> 查看材料不会改变结局；只有明确提交才会推进案件。</p>
@@ -147,11 +252,23 @@ function openTrail(): void {
 .rail-nav span { display: grid; }
 .rail-nav strong { font-size: .82rem; }
 .rail-nav small { color: var(--muted); font-size: .7rem; font-weight: 500; }
-.evidence-peek { border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-3); background: var(--surface); }
-.evidence-peek header { display: flex; justify-content: space-between; margin-bottom: var(--space-2); color: var(--muted); font-size: .72rem; font-weight: 700; }
-.evidence-peek ul { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
-.evidence-peek li { display: grid; grid-template-columns: 18px 1fr auto; gap: 6px; align-items: start; font-size: .75rem; }
-.evidence-peek small { color: var(--muted); font-size: .64rem; }
+.evidence-drawer { border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-3); background: var(--surface); display: grid; gap: var(--space-2); max-height: 62vh; overflow-y: auto; }
+.evidence-drawer header { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); font-size: .72rem; font-weight: 700; }
+.evidence-drawer .drawer-sub { margin-top: var(--space-2); border-top: 1px solid var(--line); padding-top: var(--space-2); }
+.pin-list, .ev-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.pin-list li { display: grid; grid-template-columns: 18px 1fr auto; gap: 6px; align-items: center; font-size: .76rem; border: 1px dashed #ad8a42; border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); }
+.pin-list .unpin { min-height: 24px; padding: 0 var(--space-2); font-size: .68rem; }
+.conflict-note { margin: 0; color: #8d4a44; font-size: .72rem; }
+.ev-list li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; align-items: start; font-size: .76rem; }
+.ev-list li:not(.acquired) { color: var(--muted); }
+.ev-list .ev-title { display: block; font-weight: 600; }
+.ev-list small { display: inline-block; color: var(--muted); font-size: .64rem; margin-right: 6px; }
+.ev-list .ev-tags { display: flex; gap: 4px; margin-top: 2px; }
+.ev-list .tag { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0 4px; }
+.ev-list .tag.st-conflict { border-color: #a85c55; color: #8d4a44; }
+.ev-list .tag.st-pinned { border-color: #ad8a42; color: #8a6a2c; }
+.ev-list .ev-hint { display: block; }
+.empty { color: var(--muted); font-size: .72rem; margin: 0; }
 .empty, .rail-note { margin: 0; color: var(--muted); font-size: .72rem; line-height: 1.55; }
 .rail-note { display: flex; gap: var(--space-2); align-items: flex-start; padding: 0 var(--space-1); }
 

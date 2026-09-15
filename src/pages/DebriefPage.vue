@@ -3,6 +3,7 @@
 import { computed, ref } from 'vue';
 import { useGameStore } from '../stores/game';
 import { content } from '../game/content';
+import LiteratureExcerpt from '../components/LiteratureExcerpt.vue';
 
 const game = useGameStore();
 
@@ -98,10 +99,9 @@ const PUZZLE_LABEL: Record<string, string> = {
       <h2>四部文学卡回看</h2>
       <article v-for="id in (['M-7', 'W-F', 'R-NM', 'U-R'] as const)" :key="id" class="literature-card">
         <h3>{{ id }} · {{ content.literature[id].work }}</h3>
-        <p>{{ content.literature[id].excerpt }}</p>
+        <LiteratureExcerpt :id="id" />
         <p class="muted small">
           版本：{{ content.literature[id].edition }}。游戏对原文有改造；出处与改造说明以卡面为准。
-          <a :href="content.literature[id].sourceUrl" target="_blank" rel="noopener noreferrer">原文入口（可选）</a>
         </p>
       </article>
     </section>

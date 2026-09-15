@@ -1,11 +1,17 @@
 /** 导入导出（docs/01_核心契约.md v1.1 §10）。ExportData 包裹完整 SaveData；不含录音 blob。 */
 import type { ExportData, SaveData } from './types';
-import { CONTENT_VERSION, type KVStorage, type LoadResult, parseSave } from './persistence';
+import {
+  CONTENT_VERSION,
+  SAVE_SCHEMA_VERSION,
+  type KVStorage,
+  type LoadResult,
+  parseSave,
+} from './persistence';
 
 export function buildExportFile(save: SaveData): ExportData {
   return {
     kind: 'CW_EXPORT',
-    schemaVersion: 2,
+    schemaVersion: SAVE_SCHEMA_VERSION,
     contentVersion: CONTENT_VERSION,
     save,
   };

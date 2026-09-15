@@ -11,6 +11,7 @@ withDefaults(
       | 'exit'
       | 'headphones'
       | 'moon'
+      | 'pin'
       | 'settings'
       | 'trail'
       | 'users'
@@ -66,6 +67,10 @@ withDefaults(
     </template>
     <template v-else-if="name === 'moon'">
       <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z" />
+    </template>
+    <template v-else-if="name === 'pin'">
+      <path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11Z" />
+      <circle cx="12" cy="10" r="2.2" />
     </template>
     <template v-else-if="name === 'settings'">
       <circle cx="12" cy="12" r="3" />

@@ -8,6 +8,7 @@ import { checkP8 } from '../game/gates';
 import { isAcquired } from '../game/selectors';
 import type { EdgeId, EndingId, IdentityRef, StatementId } from '../game/types';
 import HintPanel from '../components/HintPanel.vue';
+import WalkthroughHint from '../components/WalkthroughHint.vue';
 
 const game = useGameStore();
 const router = useRouter();
@@ -131,6 +132,13 @@ async function confirmEnding(): Promise<void> {
   const ok = await game.execute({ kind: 'chooseEnding', ending });
   if (ok) await router.push(`/ending/${ending}`);
 }
+
+/** 决策点收益/代价（10册 §5 已批）：选择前就能看到每个方案的真实收益与代价。 */
+function endingData(id: 'A' | 'B' | 'C') {
+  return content.endings[id] as
+    | { gains?: string[]; costs?: string[] }
+    | undefined;
+}
 </script>
 
 <template>
@@ -141,6 +149,11 @@ async function confirmEnding(): Promise<void> {
     <section class="panel">
       <h2>六人 × 三类依据（p8）</h2>
       <p class="muted small">不自动补内容；缺陈述可返回原页，已装槽位保留。</p>
+      <WalkthroughHint>
+        每行「身份子记录」选第一项（EV01 交接联）。缺陈述按页面链接去补：陈桥、宋渺在病友留言板，
+        何川、邹宁、程枝在各自的病历页，许棠已在录音台采过。提交「整理下一班依据」后，选方案 C
+        「保存事实，继续随访」。
+      </WalkthroughHint>
       <table class="slots-table">
         <thead><tr><th>床位</th><th>身份子记录</th><th>当前意愿</th></tr></thead>
         <tbody>
@@ -207,6 +220,11 @@ async function confirmEnding(): Promise<void> {
             <li>{{ opt.keeps }}</li>
             <li>结果：{{ opt.result }}</li>
           </ul>
+          <div v-if="endingData(opt.id)" class="gc small" :data-testid="`p14:gc--${opt.id}`">
+            <p class="gc-gain"><strong>收益</strong>{{ endingData(opt.id)!.gains?.[0] }}</p>
+            <p class="gc-cost"><strong>代价</strong>{{ endingData(opt.id)!.costs?.[0] }}</p>
+            <p class="muted">完整收益与代价见确认框。</p>
+          </div>
           <template v-if="opt.available">
             <button :class="opt.id === 'C' ? 'primary' : 'ghost'" :data-testid="`p14:choose--${opt.id}`" @click="confirming = opt.id">
               核对后果并确认
@@ -233,6 +251,19 @@ async function confirmEnding(): Promise<void> {
         <template v-else>
           <p>签认 ENDING：接受预填终局。整批结案，后续随访 0。</p>
         </template>
+        <!-- 决策前完整收益/代价（10册 §5 已批） -->
+        <div v-if="endingData(confirming)" class="gc">
+          <div class="gc-cols">
+            <div>
+              <h4>真实收益</h4>
+              <ul class="small"><li v-for="(g, i) in endingData(confirming)!.gains" :key="i">{{ g }}</li></ul>
+            </div>
+            <div>
+              <h4>真实代价</h4>
+              <ul class="small"><li v-for="(c, i) in endingData(confirming)!.costs" :key="i">{{ c }}</li></ul>
+            </div>
+          </div>
+        </div>
         <div class="modal-actions">
           <button class="ghost" data-testid="p14:modal-cancel" @click="confirming = null">再想想</button>
           <button class="primary" data-testid="p14:modal-confirm" @click="confirmEnding">
@@ -255,6 +286,14 @@ async function confirmEnding(): Promise<void> {
 .modal-card { background: var(--surface); border-radius: var(--radius); padding: var(--space-4); max-width: 520px; width: 90%; }
 .modal-actions { display: flex; gap: var(--space-3); justify-content: flex-end; margin-top: var(--space-3); }
 .reviewtext { white-space: pre-wrap; background: #f6f1e7; padding: var(--space-3); border-radius: var(--radius); }
+.gc { border: 1px dashed var(--line); border-radius: var(--radius); padding: var(--space-2) var(--space-3); margin: var(--space-2) 0; }
+.gc p { margin: 2px 0; display: grid; grid-template-columns: 3em 1fr; gap: var(--space-2); }
+.gc strong { font-weight: 700; }
+.gc-gain strong { color: #245a48; }
+.gc-cost strong { color: #8d4a44; }
+.gc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.gc-cols h4 { margin: 0 0 var(--space-1); font-size: 0.85em; }
+.gc-cols ul { margin: 0; padding-left: 1.1em; }
 .feedback { color: var(--error); }
 .small { font-size: 0.85em; }
 .ok { color: var(--clinical); }

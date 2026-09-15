@@ -46,7 +46,7 @@ test('隔天继续：localStorage 存档跨上下文恢复，P00 继续直达复
 
   // 身份已恢复阶段的首页是复查工作区（P05）
   await expect(page2.getByTestId('p05:tab--timeline')).toBeEnabled();
-  await expect(page2.getByText('✓ EV12 已取得')).toBeVisible();
+  await expect(page2.getByText('林闻的留言已保存为证据')).toBeVisible();
 
   // 时间线标签从“第二天”接着排（草稿为空则初始乱序，但身份与进度完整）
   await page2.getByTestId('p05:tab--timeline').click();
@@ -59,7 +59,7 @@ test('隔天继续：localStorage 存档跨上下文恢复，P00 继续直达复
     'TL_RECOUNT',
   ]);
   await page2.getByTestId('p05:submit-p2').click();
-  await expect(page2.getByText('时间线已重建')).toBeVisible();
+  await expect(page2.getByTestId('p05:p2-done')).toBeVisible();
   await page2.screenshot({ path: `${SHOTS}/sc4-nextday-p2-done.png`, fullPage: true });
 
   await ctx2.close();

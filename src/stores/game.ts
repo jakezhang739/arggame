@@ -231,11 +231,17 @@ export const useGameStore = defineStore('game', () => {
     });
   }
 
+  /** 对照托盘上限三份（08册 §4.2）：满员时加入失败并给出可恢复说明。 */
+  const PIN_LIMIT = 3;
   function togglePin(evidenceId: string): void {
     const list = save.value.pinnedEvidence;
     const i = list.indexOf(evidenceId as SaveData['pinnedEvidence'][number]);
     if (i >= 0) list.splice(i, 1);
-    else list.push(evidenceId as SaveData['pinnedEvidence'][number]);
+    else if (list.length >= PIN_LIMIT) {
+      commandError.value = `对照托盘已满（最多固定 ${PIN_LIMIT} 份）。先移出一份，再加入新的。`;
+      return;
+    } else list.push(evidenceId as SaveData['pinnedEvidence'][number]);
+    commandError.value = null;
     persist();
   }
 
